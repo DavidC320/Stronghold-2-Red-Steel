@@ -1,0 +1,94 @@
+I think the best course of action for this game is to use a SQLite database to store save data.
+
+maybe I should use a json file I'll check
+
+"player" = [
+    {
+        "Money" : 0,
+        "Party" : [0],
+        "Map" : 0
+        "inventory" : [
+            0
+        ]
+    }
+]
+
+Ally Storage Unit
+"ASU" = [
+    {
+        "Info" : [
+            "Name" : None,
+            "Dead" : None,
+            "Partied" : true
+        ],
+
+        "Statictics": [
+            "Health" : None,
+            "Speed" : None,
+            "Defence" : None,
+            "Attack" : None,
+            "Energy" : None
+        ],
+
+        "eqipment" : [
+            "Head" : None,
+            "Chest" : None,
+            "Legs" : None,
+            "Weapon" : None,
+            "Pocket" : None
+        ]
+    }
+]
+
+Item Storage Unit
+"ISU" : [
+
+]
+Yeah no SQL will be better but the player will be very akward
+
+player
+    Money Integer
+    current party Integer 
+    map Text
+
+inventory
+    Item_id
+
+parties
+    Name Text
+    m1
+    m2
+    m3
+    m4
+
+AllyStorageUnit
+    Id
+    name
+    Health
+    defense
+    speed
+    attack
+    Energy
+    Head
+    Body
+    legs
+    weapon
+    pocket
+
+ItemStroageUnit
+    id
+    type
+    subtype
+    name
+    desc
+    quantity
+    limit
+    
+This is not working
+the problem is equipment and other items
+
+
+
+
+
+

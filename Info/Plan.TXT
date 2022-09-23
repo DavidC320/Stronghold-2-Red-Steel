@@ -1,0 +1,4 @@
+Plan of action
+1. Set up
+    In this phase I brain storm ideas of how the game will work and adjust things now. It's important I keep things simple now so that I can things done faster.
+    The main goal is to get the main things done which is Allies, Enemies, and Items.

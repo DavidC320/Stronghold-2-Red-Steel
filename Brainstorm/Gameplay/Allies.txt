@@ -1,9 +1,7 @@
 Allies are the party members in the player's team.
 
 Info:
-    Namea: what NPCS and dialague will use. If there is no name then they will be called "The Nameless one"
-    Race: what weaknesses will be assigned
-    Idenity: Pronouns
+    Name: what NPCS and dialague will use. If there is no name then they will be called "The Nameless one"
 
 Statictics:
     Heath: How much yoou can be hit
@@ -11,9 +9,6 @@ Statictics:
     defense: base defensive power
     Attack: base power
     Energy: stamina
-
-Characteristics:
-    Weakness: what an ally is weak too.
 
 eqipment:
     Head
@@ -28,18 +23,8 @@ Changes to allies.
     Allies pocket number is now to make actions easier
     Allies can only have one weapon.
 
-Plans.
-    Allies will have skills
-    Full Speiclization
-        fighter:  Phyical attacks
-        caster: non Phyical attacks
-        ranger: ranged attacks
-    Speiclization:
-    Classes: What weapon an ally is good with
-        Phyical
-        melee: weapons that can attack from close
-        ranged: weapons that are farther away
+Plans:
+    Add Race and Gender into info.
+        Race determines what weaknesses an ally has
+        Gender determines how dialague refers to an ally
 
-        Non-Phyical
-        enhancer: weapons that can attack from close
-        caster: weapons that can attack from

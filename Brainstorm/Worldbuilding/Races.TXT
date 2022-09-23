@@ -1,0 +1,18 @@
+Races
+    Determines what weaknesses a chacter has within the game.
+    Subraces are what controlls what sprite is used in game.
+
+    Organic - Chacters that are made of flesh and blood
+        Weak to Ice
+        This race includes
+        Humnas
+        Beastkin
+        Insectoid
+        floroid
+        mycelium
+
+    Inorganic - Chacters that are made of metal and cuirects
+        Weak to Fire
+
+    Spiritual - Chacters that are made of energy
+        weak to air

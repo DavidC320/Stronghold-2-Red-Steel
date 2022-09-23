@@ -1,0 +1,36 @@
+Items are what gives the game depth
+
+Info 
+    Name
+    type
+    subtype
+    Description
+
+Statistics
+    quantity
+    Limit
+
+This is what all items have
+
+Item types
+    Medical
+        Medkit
+        Defibluater
+        Injects
+
+    Equipment
+        head
+        body
+        leg
+        weapon
+
+    Throwables
+        Explosive
+        gernade
+        station
+
+    Misc
+        Materials
+        Quest
+        Key
+        

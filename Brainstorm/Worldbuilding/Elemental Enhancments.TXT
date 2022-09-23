@@ -1,0 +1,14 @@
+Elements
+Fire - 
+air -
+Ice -
+
+Future Elements
+    electricty
+    water
+    earth
+
+Evils
+    Abyssal - Eats at inorganic cretaures
+    Consumed -  Consumes organic life
+    Devoid - Envelops life energy
