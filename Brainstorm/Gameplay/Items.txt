@@ -1,36 +1,25 @@
-Items are what gives the game depth
+reorganised
 
-Info 
-    Name
-    type
-    subtype
-    Description
+name / The name of the item. Important when is_custom is false
+description / An summery of the item. 
+item_type / what catigory an item is
+item_subtype / what kind of item it is. Important for game interactions
+limit / How many times an item can be stacked
+quantity / How many of that item is in the stack
+is_custom / If the item is modified or randomly genrated this will be true to stop it from being replaced
+efective / What Race catigory it's more effective on IE organics, inoganics, spectral
+effect / What special atribute an item can have
+length / How many rounds a boost will be active
 
-Statistics
-    quantity
-    Limit
+These stats are affected differently depending what type/subtype of item it's in.
+Medical Medkit, Revives - Health dictates how much health will be added by a percentage of chacter's max health
+Medical Boost - Stats dictacte how much a stat will be incresed by a percentage
+Throwables Gernade, Bomb - Attack dictates damage 
+Attack 
+defense
+health
+Energy
 
-This is what all items have
-
-Item types
-    Medical
-        Medkit
-        Defibluater
-        Injects
-
-    Equipment
-        head
-        body
-        leg
-        weapon
-
-    Throwables
-        Explosive
-        gernade
-        station
-
-    Misc
-        Materials
-        Quest
-        Key
-        
+player_class / What class equipment is attached to.
+element / What element is attached to equipment. armour is for defense and weapon is for attacks
+accuracy / how likly a weapon is to hit

@@ -1,0 +1,10 @@
+9/24/2022
+Itex Item Builder or IIB is an application that allows a user to create an item that can appear in the game.
+
+Plan
+    Basic funtionality allowing the creation of.
+        Medical Items
+        Equipment Items
+    thses will be templates
+
+    There will be 1 major app with 2 notebook tabs one for Medical and another for equipment

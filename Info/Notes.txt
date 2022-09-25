@@ -1,0 +1,4 @@
+9/24/2022
+I've gotten to a point where I can create items kind of but it's tedious making them because I need to create dictonareis. So I will make a small tkinter application to help
+create items.
+I think I just wasted my time.

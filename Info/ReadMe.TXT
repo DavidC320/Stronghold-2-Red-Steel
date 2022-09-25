@@ -1,6 +1,6 @@
 StrongHold 2 Red Steel
 by David Cruz
-Version 0.0 Alpha
+Version 0.2.1 Alpha
 
 Description
 StrongHold 2 is the Sequal to StrongHold a pen and paper game that was recreated in tkinter with verying succes. In this game you the player
