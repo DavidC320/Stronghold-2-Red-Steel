@@ -1,25 +1,25 @@
 Allies are the party members in the player's team.
 
 Info:
-    Name: what NPCS and dialague will use. If there is no name then they will be called "The Nameless one"
+    Name: what NPCs' and dialogue will use. If there is no name then they will be called "The Nameless one"
 
-Statictics:
-    Heath: How much yoou can be hit
+Statistics:
+    Heath: How much you can be hit
     speed: attack priority
     defense: base defensive power
     Attack: base power
     Energy: stamina
 
-    fighter profency
     fighter level
+    fighter experience
 
-    hunter profency
     hunter level
+    hunter experience
 
-    caster profency
     caster level
+    caster experience
 
-eqipment:
+equipment:
     Head
     Chest
     legs
@@ -28,31 +28,13 @@ eqipment:
 
 Changes to allies.
     Allies can only have one weapon.
+    removed low and high attack to make items easier
 
 Plans:
     Add Race and Gender into info.
         Race determines what weaknesses an ally has
-        Gender determines how dialague refers to an ally
+        Gender determines how dialogue refers to an ally
     Add pockets.
         Stored Items that can be sued without spending a move
-
-Mechanics
-    attacking.
-    damage is cla;cu;ated by an allies weapon profency whcih affects the lowest annd highest possible damage
-    0 : 0 - 20
-    1 : 20 - 40
-    2 : 40 - 60
-    3 : 60 - 80
-    4 : 80 - 100
-    each class as a profency and can be incresed by using more of a certain class
-    None class items can only be on armour
-    types of class affects increses
-    None - No profency decresses or increses 
-    melee - + 1 to melee -1 to everything else
-    magic - + 1 to magic -1 to everything else
-    range - + 1 to range -1 to everything else
-    Weapons get a +1 class bonus so melee +2, -1 to everything else
-    Leveling up profency takes 5 points for each level so it takes 4 rounds with an ally equiped with only class items
-    the alleis base attack is added to the low and high after profency.
 
 

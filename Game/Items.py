@@ -1,33 +1,41 @@
 # 9/24/2022
-# Item class imformation
+# Item class information
+
+from xml.dom.minidom import Element
+
 
 item_types = {
-    "medical" : ("medkit", "revive", "boost"),
+    "medical" : ("medkit", "revive", "boost", "antidote"),
     "equipment" : ("head", "body", "legs", "weapon"),
-    "throwable" : ("gernade", "bomb", "sentry"), 
+    "throwable" : ("grenade", "bomb", "sentry"), 
     "misc" : ("quest", "key", "material")
 }
 
 class Item_base:
-    def __init__(self, name, desc, type, sub, limit, quant, custom, effective, effects, length, attack, defence, health, energy, element, accuracy):
+    def __init__(self, name, desc, type, sub, limit, quant, custom,
+     effective = None, effects = None, length = None, attack = None, defense = None, health = None, energy = None, speed = None,
+      p_class = None, element = None, accuracy = None):
         # Information
         self.name = name
-        self.desciption = desc
+        self.description = desc
         self.type = type
         self.subtype = sub
         self.limit = limit
         self.quantity = quant
         self.custom = custom
 
-        self.effective
-        self.effects
-        self.length
-        self.attack
-        self.defence
-        self.health
-        self.energy
-        self.element
-        self.accuracy
+        self.effective = effective
+        self.effects = effects
+        self.length = length
+        self.attack = attack
+        self.defense = defense
+        self.health = health
+        self.energy = energy
+        self.speed = speed
+
+        self.p_class = p_class
+        self.element = element
+        self.accuracy = accuracy
 
     def add_to_quantity(self, number):
         # Adds a number into the item's limit
@@ -44,6 +52,39 @@ class Item_base:
         if self.quantity >= self.limit:
             self.quantity == self.limit
 
+class Medical_item(Item_base):
+    def __init__(self, name, desc, sub, limit, quant, custom, effective = None, effects = None, length = None, attack = None, defense = None, health = None, energy = None, speed = None, element = None):
+        super().__init__(name, desc, "medical", sub = sub, limit = limit, quant = quant, custom = custom,
+        # What Character race will get a bonus
+        effective = effective,
+        # What effects an item have. Currently only affects med kit items
+        effects = effects, 
+        # How long a boost will last
+        length = length, 
+        # These stats will be boosted by a percent
+        attack = attack, 
+        defense = defense,
+        energy = energy,
+        speed = speed,
+        # if the item is a medic then it's a percent heal by max health or a health boost by a percent
+        health = health,
+        element= element
+        )
 
-
-
+class Equipment_item(Item_base):
+    def __init__(self, name, desc, quant, custom, effects=None, attack=None, defense=None, health=None, energy=None, speed=None, p_class=None, element=None, accuracy=None):
+        super().__init__(name, desc, "equipment", 1, 1, quant = quant, custom = custom,
+        # What special attribute an item has
+        effects=effects, 
+        # stat boost
+        attack=attack, 
+        defense=defense, 
+        health=health, 
+        energy=energy, 
+        speed=speed, 
+        # What class an equipment belongs to
+        p_class=p_class, 
+        # what attribute an equipment has
+        element=element, 
+        # how likely a weapon is to hit
+        accuracy=accuracy)

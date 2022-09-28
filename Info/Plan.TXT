@@ -1,4 +1,30 @@
 Plan of action
-1. Set up
-    In this phase I brain storm ideas of how the game will work and adjust things now. It's important I keep things simple now so that I can things done faster.
-    The main goal is to get the main things done which is Allies, Enemies, and Items.
+1. build up
+    Set up game play classes.
+        character classes
+        Item classes
+        Player class
+        Inventory class
+        load and save classes
+        Start creating a SQL database as a reference
+
+2. Create game play tests
+    Create a combat mockup
+    create area controller
+    create inventory tests
+    create party changer tests
+    create NPC test
+
+3. Create the game
+    Add the game play systems
+
+2. Create simple game interface
+    Create UI for the game
+        Start
+        options
+        create file
+        load file
+        quit
+        main UI
+
+3. Create better map

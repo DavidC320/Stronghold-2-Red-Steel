@@ -1,0 +1,18 @@
+9/25/2022
+    Started Changelog.
+    Updated Plan.
+    Started Credits.
+    Updated character attack roll.
+        Damage is based on proficiency, weapon attack, base attack, and accuracy. 
+    added base attack to characters
+    Change Allies and Enemies to Character_classes
+    Finished basic character class
+    made basic player class
+    fixed up Items
+
+9/26/2022
+    The Character_classes file has a new function to create basic characters to serve as party members.
+    Created the party class in the Player file that will serve to organize and control the player's party.
+        Created change party member to make changing party members easier.
+        Created add party member to add more party members.
+    added 1.0.0 because this is the second interaction of the game

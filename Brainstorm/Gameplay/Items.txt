@@ -1,25 +1,85 @@
-reorganised
+reorganized
 
 name / The name of the item. Important when is_custom is false
 description / An summery of the item. 
-item_type / what catigory an item is
+item_type / what category an item is
 item_subtype / what kind of item it is. Important for game interactions
 limit / How many times an item can be stacked
 quantity / How many of that item is in the stack
-is_custom / If the item is modified or randomly genrated this will be true to stop it from being replaced
-efective / What Race catigory it's more effective on IE organics, inoganics, spectral
-effect / What special atribute an item can have
+is_custom / If the item is modified or randomly generated this will be true to stop it from being replaced
+effective / What Race category it's more effective on IE organics, inorganic, spectral
+effect / What special attribute an item can have
 length / How many rounds a boost will be active
 
 These stats are affected differently depending what type/subtype of item it's in.
-Medical Medkit, Revives - Health dictates how much health will be added by a percentage of chacter's max health
-Medical Boost - Stats dictacte how much a stat will be incresed by a percentage
-Throwables Gernade, Bomb - Attack dictates damage 
+Medical Med kit, Revives - Health dictates how much health will be added by a percentage of character's max health
+Medical Boost - Stats dictate how much a stat will be increased by a percentage
+Throwables Grenade, Bomb - Attack dictates damage 
 Attack 
 defense
 health
 Energy
+speed
 
 player_class / What class equipment is attached to.
-element / What element is attached to equipment. armour is for defense and weapon is for attacks
-accuracy / how likly a weapon is to hit
+element / What element is attached to equipment. armor is for defense and weapon is for attacks
+accuracy / how likely a weapon is to hit
+
+About Items
+    Items are consumables that the player can use through the game mostly in combat.
+
+Item types
+    Medical - Items that help the players' stats
+    Equipment - Items that change the players' stats
+    deployable - Items that can be used against enemies
+    miscellaneous - Items that serve a combat purpose
+
+Item subtypes
+    Medical
+        Med kit [Health, effect, effective]
+            Med kit's are items that heal a target based on the target's max health.
+            Health - what percent of health that will be healed
+            effect ("over heal") - Allows the target to retain health that went over the max
+            effective - What race will receive a +20% boost to health
+
+        Revive [Health, effective]
+            Revives are items that can bring back fallen target's based on the targets max health.
+            Health - what percent of health that will be healed
+            effective - What race will receive a +20% boost to health
+
+        Inject [effective, length, Attack, Defense, Health, Energy, Speed]
+            Injects are items that boost a stat for a target by a percent of their target stat. 
+            Example: allies' attack is boosted by 20% so a medical item's attack stat which would be 20
+            effective - what character race will get a bonus
+            length - how many rounds the boost will last
+
+            What state will be boosted by a percentage
+            attack
+            defense
+            health
+            Energy
+            Speed
+
+    Equipment
+        Head [health, defense, player class, element]
+            
+
+        body [defense, attack, player class, element]
+
+
+        legs [defense, speed, player_class, element]
+
+
+        weapon [attack, player_class, element, accuracy]
+
+
+
+    deployable
+        Grenade
+        Bomb
+        Sentry
+    
+    miscellaneous
+        Quest
+        Key
+        Material
