@@ -1,91 +1,63 @@
-I think the best course of action for this game is to use a SQLite database to store save data.
-
-maybe I should use a json file I'll check
-
-"player" = [
-    {
-        "Money" : 0,
-        "Party" : [0],
-        "Map" : 0
-        "inventory" : [
-            0
-        ]
-    }
-]
-
-Ally Storage Unit
-"ASU" = [
-    {
-        "Info" : [
-            "Name" : None,
-            "Dead" : None,
-            "Partied" : true
-        ],
-
-        "Statictics": [
-            "Health" : None,
-            "Speed" : None,
-            "Defence" : None,
-            "Attack" : None,
-            "Energy" : None
-        ],
-
-        "eqipment" : [
-            "Head" : None,
-            "Chest" : None,
-            "Legs" : None,
-            "Weapon" : None,
-            "Pocket" : None
-        ]
-    }
-]
-
-Item Storage Unit
-"ISU" : [
-
-]
-Yeah no SQL will be better but the player will be very akward
-
-player
-    Money Integer
-    current party Integer 
-    map Text
-
-inventory
-    Item_id
-
-parties
-    Name Text
-    m1
-    m2
-    m3
-    m4
-
-AllyStorageUnit
-    Id
+Allies table 19 columns
+    id
     name
-    Health
-    defense
+    race
+    health
+    total_health
     speed
-    attack
     Energy
+    defense
+    attack
+    fighter level
+    fighter experience
+    hunter level
+    hunter experience
+    caster level
+    caster experience
     Head
-    Body
+    body
     legs
     weapon
-    pocket
+    # table exclusive
+    in_party 
 
-ItemStroageUnit
+Items table 19 columns
     id
+    name
+    description
     type
     subtype
-    name
-    desc
-    quantity
     limit
-    
-This is not working
-the problem is equipment and other items
+    quantity
+    custom
+    effective
+    effects
+    length
+    attack
+    defense
+    health
+    energy
+    speed
+    player class
+    element
+    accuracy
+    # table exclusive
+    in_inventory
+
+Notes:
+    I want to create a way to easily make classes for the player but to do so I
+    would need to create a refrence table to do so but I don't know how to seperate the two tables.
+    I think I have an idea, I will first grab the allies and I'll use their Proficiency id to connect them
+
+Concept tables
+    Proficiency table
+        id
+        ally_key
+        fighter level
+        fighter experience
+        hunter level
+        hunter experience
+        caster level
 
 
 

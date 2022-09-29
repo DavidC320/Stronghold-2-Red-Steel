@@ -2,3 +2,7 @@
 I've gotten to a point where I can create items kind of but it's tedious making them because I need to create dictonareis. So I will make a small tkinter application to help
 create items.
 I think I just wasted my time.
+
+9/28/2022
+    I've been thinking about the game and I want to have a randomly generated world in the game but I jsut want those randomly genrated content be optional and I don't know a
+    way to save generated content in this but I want to use noise so I'll make a test.

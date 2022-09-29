@@ -1,21 +1,26 @@
 # 9/192022
 from Items import Equipment_item
-from random import choices, randint, random
+from random import choice, choices, randint, random
 
 class Base_Character:
-    def __init__(self, name, current_health, health, speed, energy, defense, attack, fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp, head = None, body = None, legs = None, weapon = None, pocket = None, id = None):
+    def __init__(self, id, name, race, current_health, health, speed, energy, defense, attack, fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp, head = None, body = None, legs = None, weapon = None, pocket = None):
         # Information
         self.name = name  # String
         self.id = id
+        self.race = race
+        #self.species = species
 
         # Statistics
         self.current_health = current_health  #Int
         self.hitpoints = health  # Int
         self.boosted_hitpoints = health # Int
+
         self.speed = speed  # Int
         self.energy = energy   # Int
         self.armour = defense  # Int 
         self.attack = attack  # list / [Int, Int]
+        
+        self.get_weakness()
         self.check_character() #checks if dead
 
         self.fighter_lv = fight_lv # Int
@@ -84,7 +89,7 @@ class Base_Character:
 
     @property
     def proficiency(self):
-        return f"Name: {self.name}\nFighter: {self.fighter_lv}\nHunter: {self.hunter_lv}\nCaster: {self.caster_lv}\n"
+        return f"Name: {self.name}\nFighter: {self.fighter_lv}\nHunter: {self.hunter_lv}\nCaster: {self.caster_lv}"
 
     def check_character(self):
         # checks if the current character is dead
@@ -100,11 +105,23 @@ class Base_Character:
         self.current_health -= number
         self.check_character()
 
+    def get_weakness(self):
+        self.weakness = weakness.get(self.race)
+
 
 def generate_allies(number = 4):
-    names = ("John", "Emily", "Steve", "Alice", "Alex", "Gerald", "Not Hunter but not Prey", "Hi", "World")
     party = []
     for _ in range(number):
-        member = Base_Character(*choices(names), 20, 20, 10, 20, 4, 4, randint(0, 4), 0, randint(0, 4), 0, randint(0, 4), 0)
+        name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin")
+        race = choice(races)
+        name = choice(name_list)
+        member = Base_Character(None, name, race, 20, 20, 5, 10, 4, 2, randint(0,4), 0, randint(0,4), 0, randint(0,4), 0)
         party.append(member)
     return party
+
+races = ("organic", "inorganic", "spectral")
+elements = ("ice", "fire", "air")
+weakness = {}
+for race in races:
+    num = races.index(race)
+    weakness.update({race : elements[num]})

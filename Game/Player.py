@@ -1,5 +1,6 @@
 # 9/21/2022
-from Character_classes import Base_Character, generate_allies
+from tokenize import Number
+from Character_Info import Base_Character, generate_allies
 
 class Player:
     def __init__(self):
@@ -27,13 +28,10 @@ class Party:
             party_list = [party_list]
         for member in party_list:
             if isinstance(member, Base_Character):
-                print("yeah")
+                self.team.append(member)
             else:
                 print("ERROR: This is not a base character")
                 break
+    def remove_from_party(self, index):
+        self.team.pop(index)
 
-
-
-a = Player()
-for _ in range(4):
-    a.party.add_to_party(generate_allies(1)[0])

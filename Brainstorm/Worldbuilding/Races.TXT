@@ -1,18 +1,18 @@
 Races
-    Determines what weaknesses a chacter has within the game.
-    Subraces are what controlls what sprite is used in game.
+    Determines what weaknesses a character has within the game.
+    Sub races are what controls what sprite is used in game.
 
-    Organic - Chacters that are made of flesh and blood
+    Organic - Characters that are made of flesh and blood
         Weak to Ice
-        This race includes
-        Humnas
-        Beastkin
-        Insectoid
-        floroid
-        mycelium
-
-    Inorganic - Chacters that are made of metal and cuirects
+        This species includes
+            Humans
+ 
+    Inorganic - Characters that are made of metal and circuits
         Weak to Fire
+        This species includes
+            Walkers - bipedal robots
 
-    Spiritual - Chacters that are made of energy
+    Spiritual - Characters that are made of energy
         weak to air
+        This species includes
+            Souls - ghost of those passed anchored to the world

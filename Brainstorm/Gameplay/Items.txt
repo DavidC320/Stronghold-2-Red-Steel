@@ -60,6 +60,10 @@ Item subtypes
             Energy
             Speed
 
+        Antidote [element]
+            Antidotes are items that heal status conditions.
+            element - What status they heal
+
     Equipment
         Head [health, defense, player class, element]
             

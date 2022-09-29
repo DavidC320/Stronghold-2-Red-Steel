@@ -1,14 +1,22 @@
 Allies are the party members in the player's team.
 
 Info:
+    Id : The Identification of an ally
     Name: what NPCs' and dialogue will use. If there is no name then they will be called "The Nameless one"
+    Race : What category an ally is apart of, affects weaknesses
 
 Statistics:
+    Current Health: 
     Heath: How much you can be hit
+    Boosted Health: 
+
     speed: attack priority
     defense: base defensive power
     Attack: base power
     Energy: stamina
+
+    Weakness:
+    Dead:
 
     fighter level
     fighter experience
@@ -28,12 +36,8 @@ equipment:
 
 Changes to allies.
     Allies can only have one weapon.
-    removed low and high attack to make items easier
 
 Plans:
-    Add Race and Gender into info.
-        Race determines what weaknesses an ally has
-        Gender determines how dialogue refers to an ally
     Add pockets.
         Stored Items that can be sued without spending a move
 

@@ -16,3 +16,9 @@
         Created change party member to make changing party members easier.
         Created add party member to add more party members.
     added 1.0.0 because this is the second interaction of the game
+
+9/28/2022
+    Character_classes has been changed to character_info
+    did work in character_info
+    did work in Player
+    did work in saving
