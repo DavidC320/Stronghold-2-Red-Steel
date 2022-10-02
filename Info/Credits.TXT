@@ -1,1 +1,3 @@
-9/25/2022
+Alixaprodev.com
+save_manager
+    https://www.alixaprodev.com/2022/03/python-to-get-database-column-names.html#:~:text=To%20get%20the%20name%20of%20the%20columns%20from,the%20name%20of%20the%20columns%20of%20sqlite%20datbase.

@@ -1,6 +1,5 @@
 # 9/21/2022
-from tokenize import Number
-from Character_Info import Base_Character, generate_allies
+from .Character_Info import Base_Character
 
 class Player:
     def __init__(self):

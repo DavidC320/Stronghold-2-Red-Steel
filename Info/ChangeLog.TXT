@@ -22,3 +22,16 @@
     did work in character_info
     did work in Player
     did work in saving
+    
+9/28/2022
+    File restructuring, forgot the changes
+    added more items into the Game_info
+    worked on save_manager
+        Created allies
+        created items
+
+10/2/2022 0.4.0 Dynamic
+    Created dynamic tables in Game_info and save_manager
+        Game_info now has ally, proficiencies, and item dictionaries
+        Game_info has a table builder to easily create SQL tables
+        Save_manager now has less code

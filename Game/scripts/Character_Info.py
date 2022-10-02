@@ -1,12 +1,13 @@
 # 9/192022
-from Items import Equipment_item
-from random import choice, choices, randint, random
+from .Game_info import character_races
+from .Inventory import Equipment_item
+from random import choice, randint
 
 class Base_Character:
     def __init__(self, id, name, race, current_health, health, speed, energy, defense, attack, fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp, head = None, body = None, legs = None, weapon = None, pocket = None):
         # Information
-        self.name = name  # String
         self.id = id
+        self.name = name  # String
         self.race = race
         #self.species = species
 
@@ -38,7 +39,7 @@ class Base_Character:
         self.legs = legs # object / None
 
         if weapon == None:
-            weapon = Equipment_item("Fist", "Should get a weapon", "weapon", False, attack=6, p_class="fighter", accuracy=70)
+            weapon = Equipment_item(None, "Fist", "Should get a weapon", "weapon", False, attack=6, p_class="fighter", accuracy=70)
         self.weapon = weapon # object
         # self.pocket = pocket # object
 
@@ -106,22 +107,17 @@ class Base_Character:
         self.check_character()
 
     def get_weakness(self):
-        self.weakness = weakness.get(self.race)
+        self.weakness = character_races.get(self.race).get("weakness")
 
 
 def generate_allies(number = 4):
     party = []
     for _ in range(number):
         name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin")
+        races = list(character_races.keys())
         race = choice(races)
         name = choice(name_list)
         member = Base_Character(None, name, race, 20, 20, 5, 10, 4, 2, randint(0,4), 0, randint(0,4), 0, randint(0,4), 0)
         party.append(member)
     return party
 
-races = ("organic", "inorganic", "spectral")
-elements = ("ice", "fire", "air")
-weakness = {}
-for race in races:
-    num = races.index(race)
-    weakness.update({race : elements[num]})

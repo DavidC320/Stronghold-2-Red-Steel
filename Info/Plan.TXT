@@ -1,12 +1,12 @@
 Plan of action
 1. build up
     Set up game play classes.
-        character classes
-        Item classes
-        Player class
-        Inventory class
+        character classes -
+        Item classes -
+        Player class -
+        Inventory class -
         load and save classes
-        Start creating a SQL database as a reference
+        Start creating a SQL database as a reference -
 
 2. Create game play tests
     Create a combat mockup

@@ -6,3 +6,29 @@ I think I just wasted my time.
 9/28/2022
     I've been thinking about the game and I want to have a randomly generated world in the game but I jsut want those randomly genrated content be optional and I don't know a
     way to save generated content in this but I want to use noise so I'll make a test.
+
+9/29/2022
+    This project is getting more chaotic and I need to fix that problem so I'm going to wright down what I want.
+
+    Do's
+    battle simulator
+    overworld map
+    Perlin noise terrain generation
+    SQL save data
+
+    Dont's
+    Character Creator
+    item Creator
+    party Creator
+
+9/30/2022
+    I started making the sql save manager but I started getting fustrated becasue I'm trying to solve several none existant problems that will happen.
+        Predicted problems:
+            How will I get the character's proficiencies
+                solution - just make another table
+            How will I save the player's data. I.E money, current map
+                create a table for game data like user_data
+            Updating save games, mostly updating
+                solve it when it happens
+            saving map data
+                solve it when it happens
