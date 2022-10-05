@@ -1,10 +1,10 @@
 9/24/2022
-I've gotten to a point where I can create items kind of but it's tedious making them because I need to create dictonareis. So I will make a small tkinter application to help
+I've gotten to a point where I can create items kind of but it's tedious making them because I need to create dictionaries. So I will make a small Tkinter application to help
 create items.
 I think I just wasted my time.
 
 9/28/2022
-    I've been thinking about the game and I want to have a randomly generated world in the game but I jsut want those randomly genrated content be optional and I don't know a
+    I've been thinking about the game and I want to have a randomly generated world in the game but I just want those randomly generated content be optional and I don't know a
     way to save generated content in this but I want to use noise so I'll make a test.
 
 9/29/2022
@@ -12,17 +12,17 @@ I think I just wasted my time.
 
     Do's
     battle simulator
-    overworld map
+    over world map
     Perlin noise terrain generation
     SQL save data
 
-    Dont's
+    Don't
     Character Creator
     item Creator
     party Creator
 
 9/30/2022
-    I started making the sql save manager but I started getting fustrated becasue I'm trying to solve several none existant problems that will happen.
+    I started making the SQL save manager but I started getting frustrated because I'm trying to solve several none existent problems that will happen.
         Predicted problems:
             How will I get the character's proficiencies
                 solution - just make another table
@@ -32,3 +32,25 @@ I think I just wasted my time.
                 solve it when it happens
             saving map data
                 solve it when it happens
+
+10/4/2022
+    I'm getting stuck trying to find a way to give items to the allies and I hope I can use this to clear everything
+        So for my load function I want to get the data from the allies and combine it with the data from the data in Skills so I can have proficiencies
+        The problem is that I want to make sure that items are given to the right ally if they have them equipped
+        The items can be in either
+            Storage
+            Inventory
+            ally
+        The important one is the ally table because it contains all of the items an ally is wearing
+        each ally has four equip slots
+            head
+            body
+            legs
+            weapon
+        so I just need to do a for loop on all of the allies which sounds really difficult.. not really but seems inefficiency
+        so I think the best thing to do is to create two lists for Inventory and Storage so that those are put up easily
+        the ally table is the hard part because to make it easy to use is by creating a dictary where the id is used as the key but the value is a equipment 
+        item class object
+        I.E 
+            {1 : Base_item(stuff)}
+        this will at least get things ready

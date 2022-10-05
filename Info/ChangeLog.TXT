@@ -35,3 +35,11 @@
         Game_info now has ally, proficiencies, and item dictionaries
         Game_info has a table builder to easily create SQL tables
         Save_manager now has less code
+
+10/4/2022 0.4.1 Dynamic 2
+    created a way to get data from a table and put it into a dictionary
+    did optimized table data to dictionary conversion
+    added in_party variable to the Base_Character object
+    Started working on the Base_Character save data
+    converted several item columns from integers into text
+    added bool_conversion dictionary

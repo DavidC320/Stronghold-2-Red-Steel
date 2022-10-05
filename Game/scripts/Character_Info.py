@@ -1,14 +1,19 @@
 # 9/192022
-from .Game_info import character_races
-from .Inventory import Equipment_item
+from Game_info import character_races
+from Inventory import Equipment_item
 from random import choice, randint
 
 class Base_Character:
-    def __init__(self, id, name, race, current_health, health, speed, energy, defense, attack, fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp, head = None, body = None, legs = None, weapon = None, pocket = None):
+    def __init__(self, id, name, race, in_party, 
+    current_health, health, speed, energy, defense, attack, 
+    fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp, 
+    head = None, body = None, legs = None, weapon = None, pocket = None
+    ):
         # Information
         self.id = id
         self.name = name  # String
-        self.race = race
+        self.race = race  # String
+        self.in_party = in_party  # Bool
         #self.species = species
 
         # Statistics
@@ -44,7 +49,12 @@ class Base_Character:
         # self.pocket = pocket # object
 
     @property
+    def character_save_data(self):
+        None
+
+    @property
     def attack_roll(self): 
+        # gets the damage that the ally will deal
         used_class = self.weapon.p_class
         proficiency_class = {
             "fighter" : self.fighter_lv,
@@ -88,10 +98,6 @@ class Base_Character:
             base_attack += self.body.attack
         return base_attack
 
-    @property
-    def proficiency(self):
-        return f"Name: {self.name}\nFighter: {self.fighter_lv}\nHunter: {self.hunter_lv}\nCaster: {self.caster_lv}"
-
     def check_character(self):
         # checks if the current character is dead
         if self.current_health > self.boosted_hitpoints:
@@ -102,13 +108,12 @@ class Base_Character:
         else:
             self.dead = False
 
-    def damage(self, number):
+    def take_damage(self, number):
         self.current_health -= number
         self.check_character()
 
     def get_weakness(self):
         self.weakness = character_races.get(self.race).get("weakness")
-
 
 def generate_allies(number = 4):
     party = []

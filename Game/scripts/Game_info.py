@@ -14,6 +14,7 @@ def table_builder(table_dict):
             string += ", "
 
         text += string
+    return text
 
 ##############################################################################################################################################################################################################################################################################
 ################################################################################################################################## Game Data #################################################################################################################################
@@ -47,13 +48,13 @@ character_races = {
 elements = ("ice", "fire", "air")
 
 # What effects are in the game
-effects = ("Over heal")
+effects = ("over heal")
 
 # What fighting style a weapon belongs to
-player_classes = ("Fighter", "Hunter", "Caster")
+player_classes = ("fighter", "hunter", "caster")
 
 # Where an item is
-item_location = ("Equipped", "Inventory", "Storage")
+item_location = ("equipped", "inventory", "storage")
 
 ##############################################################################################################################################################################################################################################################################
 ################################################################################################################################## Game Data #################################################################################################################################
@@ -65,25 +66,26 @@ item_location = ("Equipped", "Inventory", "Storage")
 ##############################################################################################################################################################################################################################################################################
 
 ally_table_column = {
-    "id" : "integer primary key",
+    "id" : "integer primary key AUTOINCREMENT",
     "name" : "text", 
-    "race" : "text", 
+    "race" : "text",
+    "in_party" : "boolean",
     "health" : "integer", 
     "max_health" : "integer", 
     "speed" : "integer", 
     "energy" : "integer", 
     "defense" : "integer", 
     "attack" : "integer", 
-    "proficiencies" : "integer references Skills (ally_id)", 
-    "head integer" : "references Items (id)", 
-    "body integer" : "references Items (id)", 
-    "legs integer" : "references Items (id)",
-    "in_party" : "boolean"
+    "proficiencies" : "integer", 
+    "head" : "integer", 
+    "body" : "integer", 
+    "legs" : "integer",
+    "weapon" : "integer"
     }
 ally_table_s = table_builder(ally_table_column)
 
 proficiencies_table_column = {
-    "id" : "integer primary key",
+    "id" : "integer primary key AUTOINCREMENT",
     "ally_id" : "integer references Allies (id)",
     "fighter_level" : "integer",
     "fighter_xp" : "integer",
@@ -95,28 +97,32 @@ proficiencies_table_column = {
 proficiencies_table_s = table_builder(proficiencies_table_column)
 
 item_table_column = {
-    "id" : "integer primary key",
+    "id" : "integer primary key AUTOINCREMENT",
     "name" : "text",
     "description" : "text",
-    "type" : "integer",
-    "subtype" : "integer",
+    "type" : "text",
+    "subtype" : "text",
     "item_limit" : "integer",
     "item_max_limit" : "integer",
-    "custom" : "boolean",
-    "effective" : "integer",
-    "effects" : "integer",
+    "effective" : "text",
+    "effects" : "text",
     "length" : "integer",
     "attack" : "integer",
     "defense" : "integer",
     "health" : "integer",
     "energy" : "integer",
     "speed" : "integer",
-    "player_class" : "integer",
-    "element" : "integer",
+    "player_class" : "text",
+    "element" : "text",
     "accuracy" : "integer",
-    "location" : "integer"
+    "location" : "text"
     }
 item_table_s = table_builder(item_table_column)
+
+bool_conversion = {
+    "true" : True,
+    "false" : False
+}
 
 ##############################################################################################################################################################################################################################################################################
 ################################################################################################################################## SQL Data ##################################################################################################################################

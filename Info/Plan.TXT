@@ -2,11 +2,26 @@ Plan of action
 1. build up
     Set up game play classes.
         character classes -
+
         Item classes -
+
         Player class -
+
         Inventory class -
-        load and save classes
+
         Start creating a SQL database as a reference -
+
+        load and save classes
+            I want to create a dynamic SQL database that can be easily modified to have more columns.
+            I also want to make the player save file a whole folder that includes the SQL database and a JSON file for general information
+            To make this I will need to figure out how create player save folders and then to add files into that folder.
+            This folder will contain
+                SQL database
+                    Allies
+                    Proficiencies
+                    items
+                Player JSON file
+                    Money
 
 2. Create game play tests
     Create a combat mockup

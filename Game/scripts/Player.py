@@ -1,5 +1,5 @@
 # 9/21/2022
-from .Character_Info import Base_Character
+from Character_Info import Base_Character
 
 class Player:
     def __init__(self):
