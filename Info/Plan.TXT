@@ -16,11 +16,11 @@ Plan of action
             I also want to make the player save file a whole folder that includes the SQL database and a JSON file for general information
             To make this I will need to figure out how create player save folders and then to add files into that folder.
             This folder will contain
-                SQL database
+                SQL database -
                     Allies
                     Proficiencies
                     items
-                Player JSON file
+                Player JSON file - last thing until 1.0.0
                     Money
 
 2. Create game play tests

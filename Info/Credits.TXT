@@ -5,3 +5,7 @@ save_manager
 Geeks for Geeks
 save_manager
     https://www.geeksforgeeks.org/create-a-directory-in-python/
+
+finxter
+save_manager
+    https://blog.finxter.com/python-one-line-for-loop-a-simple-tutorial/#:~:text=There%20are%20two%20ways%20of%20writing%20a%20one-liner,%3D%20%5Bi%2A%2A2%20for%20i%20in%20range%20%2810%29%5D.%20

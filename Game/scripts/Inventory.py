@@ -1,16 +1,17 @@
 # 9/192022
 class Inventory:
-    def __init__(self):
-        self.items = []
+    def __init__(self, inventory_limit = 20):
+        self.inventory = []
+        self.inventory_limit = inventory_limit
         self.stored_items = []
 
 #############################################################################################################################################################################################
 ########################################################################################### Items ###########################################################################################
 #############################################################################################################################################################################################
 class Item_base:
-    def __init__(self, id, name, desc, type, sub, limit, quant, custom,
-     effective = None, effects = None, length = None, attack = None, defense = None, health = None, energy = None, speed = None,
-      p_class = None, element = None, accuracy = None):
+    def __init__(self, id, name, desc, type, sub, limit, quant, location,
+        length = None, attack = None, defense = None, health = None, energy = None, speed = None, accuracy = None,
+        effective = None, effects = None, p_class = None, element = None):
         # Information
         self.id = id
         self.name = name
@@ -19,20 +20,20 @@ class Item_base:
         self.subtype = sub
         self.limit = limit
         self.quantity = quant
-        self.custom = custom
+        self.location = location 
 
-        self.effective = effective
-        self.effects = effects
         self.length = length
         self.attack = attack
         self.defense = defense
         self.health = health
         self.energy = energy
         self.speed = speed
+        self.accuracy = accuracy
 
+        self.effective = effective
+        self.effects = effects
         self.p_class = p_class
         self.element = element
-        self.accuracy = accuracy
 
     def add_item(self, number):
         # Adds a number into the item's limit
@@ -46,44 +47,51 @@ class Item_base:
             if self.quantity <= 0:
                 del self
 
+    @property
+    def print_data(self):
+        information = ( self.id, self.name, self.description, self.type, self.subtype, self.limit, self.quantity, self.location)
+        statistics = (self.length, self.attack, self.defense, self.defense, self.health, self.energy, self.speed, self.accuracy)
+        enhancements = (self.effective, self.effects, self.p_class, self.element)
+        print(f"information {information}\nstatistics {statistics}\nenhancements{enhancements}")
+
 class Medical_item(Item_base):
     def __init__(
-        self, id, name, desc, sub, limit, quant, custom, effective = None, effects = None, length = None, attack = None, defense = None, health = None, energy = None, speed = None, element = None):
-        super().__init__(id, name, desc, "medical", sub = sub, limit = limit, quant = quant, custom = custom,
-        # What Character race will get a bonus
-        effective = effective,
-        # What effects an item have. Currently only affects med kit items
-        effects = effects, 
-        # How long a boost will last
-        length = length, 
-        # These stats will be boosted by a percent
-        attack = attack, 
-        defense = defense,
-        energy = energy,
-        speed = speed,
-        # if the item is a medic then it's a percent heal by max health or a health boost by a percent
-        health = health,
-        # What status an antidote will heal
-        element= element
-        )
+        self, id, name, desc, sub, limit, quant, location, length = None, attack = None, defense = None, health = None, energy = None, speed = None, effective = None, effects = None, element = None):
+        super().__init__(id, name, desc, "medical", sub, limit, quant, location, 
+        length, 
+        attack, 
+        defense, 
+        health, 
+        energy, 
+        speed, 
+
+        effective= effective, 
+        effects= effects, 
+        element= element)
 
 class Equipment_item(Item_base):
-    def __init__(self,id,  name, desc, quant, custom, effects=None, attack=None, defense=None, health=None, energy=None, speed=None, p_class=None, element=None, accuracy=None):
-        super().__init__(id, name, desc, "equipment", 1, 1, quant = quant, custom = custom,
-        # What special attribute an item has
-        effects=effects, 
-        # stat boost
-        attack=attack, 
-        defense=defense, 
-        health=health, 
-        energy=energy, 
-        speed=speed, 
-        # What class an equipment belongs to
-        p_class=p_class, 
-        # what attribute an equipment has
-        element=element, 
-        # how likely a weapon is to hit
-        accuracy=accuracy)
+    def __init__(self, id,  name, desc, sub, location, attack=None, defense=None, health=None, energy=None, speed=None, accuracy=None, effects=None, p_class=None, element=None):
+        super().__init__(id, name, desc, "equipment", sub, 1, 1, location,
+        
+        attack= attack,
+        defense= defense,
+        health= health,
+        energy= energy,
+        speed= speed,
+        accuracy= accuracy,
+
+        effects= effects,
+        p_class= p_class,
+        element= element)
 ###############################################################################################################################################################################################
 ############################################################################################ Items ############################################################################################
 ###############################################################################################################################################################################################
+
+##############################################################################################################################################################################################
+####################################################################################### Prebuilt items #######################################################################################
+##############################################################################################################################################################################################
+
+
+##############################################################################################################################################################################################
+####################################################################################### Prebuilt items #######################################################################################
+##############################################################################################################################################################################################

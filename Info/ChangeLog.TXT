@@ -43,3 +43,20 @@
     Started working on the Base_Character save data
     converted several item columns from integers into text
     added bool_conversion dictionary
+
+10/5/2022 0.5.0 json
+    character_info file
+        moved party into
+        party_add_to_party has been changed to add_members and now can add to both party and storage
+    Game_info file
+        changed the names of the columns item_limit and item_max to quantity and item_limit
+    Inventory file
+        remodeled the inventory class to include inventory list and inventory_limit
+        cleaned up all of Item classes to make it more legible
+        in added the property print data in Item_base
+    Player file
+        added the manager and inventory into the player class
+    Save_manager file
+        finished creating the load_save_folder function
+        created active_sql function to set file paths and database managing
+        created item_converter to easily convert sql item data to item class objects

@@ -15,7 +15,7 @@ class Save_file_manager:
 
     def load_save_folder(self, file_name):
         self.path = f"Saves\\{file_name}"
-        self.active_sql(file_name)
+        self.active_sql()
 
         # Grabs allies
         # SQL code from Rahul Tripathi for idea
@@ -31,30 +31,65 @@ class Save_file_manager:
         self.curser.execute("Alter table temp drop column ally_id")
         allies_dict = self.get_table_data("select * from temp")
         self.curser.execute("drop table temp")
-        print(allies_dict)
 
         # Get Storage items
         storage_dict = self.get_table_data("""
         Select * from Items
         where location = "storage"
         """)
-        print(storage_dict)
 
         # get Inventory items
-        storage_dict = self.get_table_data("""
+        inventory_dict = self.get_table_data("""
         Select * from Items
         where location = "inventory"
         """)
-        print(storage_dict)
 
         # get equipped items
-        storage_dict = self.get_table_data("""
+        equip_dict = self.get_table_data("""
         Select * from Items
         where location = "equipped"
         """)
-        print(storage_dict)
 
-        
+        # converts items into object items
+        # code snippet form finxter
+        inventory = [self.item_converter(i) for i in inventory_dict] # creates a list of converted inventory items
+        item_storage = [self.item_converter(i) for i in storage_dict]
+
+        # Get's equipped items ready to be paired to allies
+        equips = {}
+        for i in equip_dict:
+            item = self.item_converter(i)
+            
+            item.print_data
+            equips.update({item.id : item})
+
+        # finalize equipped items
+        for ally in allies_dict:
+            for slot in ("head", "body", "legs", "weapon"):
+                item_id = ally.get(slot)
+                if item_id != None:
+                    if item_id in equips.keys():
+                        ally.update({slot : equips.get(item_id)})
+
+        # puts items that couldn't find a match into the storage
+        for item in list(equips.values()):
+            item_storage.append(item)
+
+        # create the allies
+        party = []
+        ally_storage = []
+        for a in allies_dict:
+            ally = Base_Character(
+                a.get("id"), a.get("name"), a.get("race"), a.get("in_party"), 
+                a.get("health"), a.get("max_health"), a.get("speed"), a.get("energy"), a.get("defense"), a.get("attack"), 
+                a.get("fighter_level"), a.get("fighter_xp"), a.get("hunter_level"), a.get("hunter_xp"), a.get("caster_level"), a.get("caster_xp"),
+                a.get("head"), a.get("body"), a.get("legs"), a.get("weapon"))
+            if ally.in_party:
+                party.append(ally)
+            else:
+                ally_storage.append(ally)
+
+            return item_storage, inventory, party, ally_storage
 
 
     def create_save_folder(self, file_name):
@@ -70,7 +105,7 @@ class Save_file_manager:
 
         if success:
             self.path = f"Saves\\{file_name}"
-            self.active_sql(file_name)
+            self.active_sql()
 
             # Tables
             ally_table = f"CREATE TABLE IF NOT EXISTS Allies( {ally_table_s} )"
@@ -107,9 +142,32 @@ class Save_file_manager:
             ally_list.append(ally_section)
         return ally_list
 
-    def active_sql(self, file_name):
+    def active_sql(self):
         self.database = sqlite3.connect(f"{self.path}\\Player_Ally_Item.db")
         self.curser = self.database.cursor()
+
+    def item_converter(self, i):
+        # converts item dictionaries into items
+        item_type = i.get("type")
+
+        if item_type == "equipment":
+            item = Equipment_item(
+                # Information
+                i.get("id"), i.get("name"), i.get("description"), i.get("subtype"), i.get("location"), i.get("attack"), 
+                # Stats
+                i.get("defense"), i.get("health"), i.get("energy"), i.get("speed"), i.get("accuracy"), 
+                # enhancements
+                i.get("effects"), i.get("player_class"), i.get("element"))
+
+        elif item_type == "medical":
+            item = Medical_item(
+                # Information
+                i.get("id"), i.get("name"), i.get("description"), i.get("subtype"), i.get("limit"), i.get("quantity"), i.get("location"), 
+                # Stats
+                i.get("length"), i.get("attack"), i.get("defense"), i.get("health"), i.get("energy"), i.get("speed"), 
+                # enhancements
+                i.get("effective"), i.get("effects"), i.get("element"))
+        return item
         
 Save_file_manager().create_save_folder("as")
 Save_file_manager().load_save_folder("as")
