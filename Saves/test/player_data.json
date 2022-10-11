@@ -1,0 +1,10 @@
+{
+  "data versions": {
+    "json": 0.1,
+    "sql": 1.0
+  },
+  "player info": {
+    "difficulty": null,
+    "money": 0
+  }
+}

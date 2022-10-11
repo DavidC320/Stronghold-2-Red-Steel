@@ -54,3 +54,26 @@ I think I just wasted my time.
         I.E 
             {1 : Base_item(stuff)}
         this will at least get things ready
+
+10/8/2022
+    I've gotten the json data funtion done but now I'm getting frustrated
+        1. How do I make sure that the code can find the file and create one if it's not their
+            to do this I'll need to redo how the create and load funtions work and make theme more simple kind of.
+            I will seperate the load funtions and create funtions into their own funtions so that they can be called if they don't exist
+
+    I've got hit by a stand still because I've noticed a big problem with the connection between the characters and equipped items
+    All of these classes have a id that can be none which is not good when creating connections.
+    the player class is the one that uses an id to connect weapons to it so the weapon or item needs a way to get an id for sql to use.
+    the only way I can think of getting an id for a weapon is to have sql create a list of id's and use that to find the next id to use.
+    so it would be something like
+        select id from items order by id desc
+        list of nums =  fetchall
+        list of nums = [0, 1, 2, 3, 4]
+        this will also work for 
+
+    I completed the auto id thibng but I found out that data is stored differently um let me explain
+    when importing, you are basicly making a clone of the data and saving that clone within the confines of the file so if you have two files 
+    importing you are just creating two clones of the same file but those clones can not comunicate with each other so my auto incrementer doesn't work.
+    I think the best way to fix this problem is to make a way to stoere the used ids so that the code can use them.
+    I can't use a json file to do that becasue that's alot of opeing and closing and updating a single file and I want to keep that a minimum so I need to create
+    a way in a player class that can keep that data inside or store it in the party class.

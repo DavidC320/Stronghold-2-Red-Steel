@@ -20,8 +20,11 @@ Plan of action
                     Allies
                     Proficiencies
                     items
-                Player JSON file - last thing until 1.0.0
+                Player JSON file - last thing until 1.0.0 - 
                     Money
+
+        New section
+            Creating saving data for item and character classes
 
 2. Create game play tests
     Create a combat mockup

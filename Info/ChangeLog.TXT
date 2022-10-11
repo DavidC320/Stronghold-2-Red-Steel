@@ -60,3 +60,41 @@
         finished creating the load_save_folder function
         created active_sql function to set file paths and database managing
         created item_converter to easily convert sql item data to item class objects
+
+10/6-10/2022 1.0.0 Game tests
+    Game
+        started making a framework for the game
+
+    Character_info
+        updated add_members to allow auto ids
+        created generate allies function
+        created generate_id
+
+    Game_info
+        fixed the races to lower case
+        added sql_versions
+        fixed the item limit column to item_limit
+        added json sql_versions
+        created player_jason_data dictionary
+    
+    Inventory
+        Gave the Ivnetory the ability to convert item ids to numbers if none
+        organise invntories has been added along with organizer
+        gave items is_full and empty_space
+        change_qauntity has been added into base item
+        gave base items save_data property
+
+    Player
+        imported sys to allow the modules within scripts to run
+        changed the name of party to party manager
+    
+    Save_manager
+        created load_save_folder
+        created create_save_folder
+        created funtions for sql loading
+        created json loading funtions
+
+    others
+        created item count test
+
+    

@@ -1,8 +1,9 @@
 # 9/192022
-from pygame import *
+import sys
+sys.path.append("Game/scripts")
+from scripts import Player
 
-# Stronghold 2 Red steel
-# The Main game
+def play():
+    player = Player()
 
-# Stronghold Blue blue platinum
-# tkinter remake of the pen and pencil game
+play()

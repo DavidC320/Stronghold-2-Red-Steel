@@ -1,14 +1,19 @@
 # 9/192022
 from Game_info import character_races
-from Inventory import Equipment_item
+from Inventory import Equipment_item, Item_base
 from random import choice, randint
 
-class Party:
+class Party_manager:
     def __init__(self, team_limit = 4):
+        # allies
         self.team = []
-        self.team_limit = team_limit  # How many allies can be in a party at once
         self.storage = []
+
+        # important information
+        self.team_limit = team_limit  # How many allies can be in a party at once
         self.current_member = 0
+
+        self.used_ally_ids = []
 
     def change_current(self, places = 1):
         party_size = len(self.team)
@@ -24,6 +29,8 @@ class Party:
             party_list = [party_list]
         for member in party_list:
             if isinstance(member, Base_Character):
+                if member.id == None:
+                    member.id = self.generate_id()
                 if add_to_party:
                     self.team.append(member)
                 else:
@@ -34,6 +41,27 @@ class Party:
 
     def remove_from_party(self, index):
         self.team.pop(index)
+
+    def generate_allies(self, number = 4):
+        party = []
+        for _ in range(number):
+            name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin")
+            races = list(character_races.keys())
+            race = choice(races)
+            name = choice(name_list)
+            member = Base_Character(None, name, race, True, 20, 20, 5, 10, 4, 2, randint(0,4), 0, randint(0,4), 0, randint(0,4), 0,)
+            party.append(member)
+        self.add_members(party)
+
+    def generate_id(self):
+        if len(self.used_ally_ids) == 0:
+            self.used_ally_ids.append(0)
+        ids = self.used_ally_ids
+        ids.sort()
+
+        id = ids[-1] + 1
+        self.used_ally_ids.append(id)
+        return id
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################
 #############################################################################################################################################################################
@@ -78,13 +106,60 @@ class Base_Character:
         self.legs = legs # object / None
 
         if weapon == None:
-            weapon = Equipment_item(None, "Fist", "Should get a weapon", "weapon", False, attack=6, p_class="fighter", accuracy=70)
+            weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
         self.weapon = weapon # object
         # self.pocket = pocket # object
 
     @property
     def character_save_data(self):
-        None
+        if self.weapon.name == "Fist":
+            weapon = None
+        else:
+            weapon = self.weapon
+
+        ally_data = ""
+        player_data = (self.id, self.name, self.race, self.in_party,
+        self.current_health, self.hitpoints, self.speed, self.energy, self.armour, self.attack, 
+        self.head, self.body, self.legs, weapon)
+
+        prof_data = (self.fighter_lv, self.fighter_xp, self.hunter_lv, self.hunter_xp, self.caster_lv, self.caster_xp)
+        items = (self.head, self.body, self.legs, weapon)
+        data = []
+        for data_set in (player_data, prof_data):
+            text_data = ""
+            num = 0
+            for stat in data_set:
+                if isinstance(stat, str):
+                    text = f"'{stat}'"
+                elif isinstance(stat, Item_base):
+                    text = f"{stat.id}"
+                elif isinstance(stat, bool):
+                    conversions = {
+                        True : "True",
+                        False : "False"
+                    }
+                    text = f"'{conversions.get(stat)}'"
+                elif stat == None:
+                    text = "?"
+                else:
+                    text = f"{stat}"
+                if num!= len(data_set) -1:
+                    text += ", "
+                text_data += text
+                num += 1
+            data.append(text_data)
+
+        # items
+        item_list = []
+        for item in items:
+            if item != None:
+                item_list.append(item.save_data)
+        data.append(item_list)
+        print(data)
+
+
+
+            
 
     @property
     def attack_roll(self): 
@@ -148,17 +223,6 @@ class Base_Character:
 
     def get_weakness(self):
         self.weakness = character_races.get(self.race).get("weakness")
-
-def generate_allies(number = 4):
-    party = []
-    for _ in range(number):
-        name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin")
-        races = list(character_races.keys())
-        race = choice(races)
-        name = choice(name_list)
-        member = Base_Character(None, name, race, 20, 20, 5, 10, 4, 2, randint(0,4), 0, randint(0,4), 0, randint(0,4), 0)
-        party.append(member)
-    return party
 
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################

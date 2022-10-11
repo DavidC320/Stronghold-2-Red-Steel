@@ -27,6 +27,21 @@ data_set = """
         ]
     }"""
 
-data = json.loads(data_set)
+player_jason_data = {
+    "data versions" : {
+        "sql" : 10,
+        "json" : 1
+    },
 
-print(data['allies'])
+    "player info" : {
+        "money" : 0,
+        "difficulty" : None
+    }
+}
+
+# dumps converts pthon objects to json string
+# loads converts json string into a python objects
+data = json.dumps(player_jason_data, indent=2, sort_keys=True)
+data = json.loads(data)
+
+print(data)

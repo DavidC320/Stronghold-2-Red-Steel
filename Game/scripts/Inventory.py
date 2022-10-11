@@ -1,9 +1,80 @@
 # 9/192022
 class Inventory:
     def __init__(self, inventory_limit = 20):
-        self.inventory = []
-        self.inventory_limit = inventory_limit
+        # Items
         self.stored_items = []
+        self.inventory = []
+
+        # information
+        self.inventory_limit = inventory_limit
+        self.used_ally_ids = []
+
+    def generate_id(self):
+        if len(self.used_ally_ids) == 0:
+            self.used_ally_ids.append(0)
+        ids = self.used_ally_ids
+        ids.sort()
+
+        id = ids[-1] + 1
+        self.used_ally_ids.append(id)
+        return id
+    
+    def organize_inventories(self, t_inventory_f_storage):
+        # chooses what item collection to organise
+        if t_inventory_f_storage:
+            self.inventory = self.organizer(self.inventory)
+        else:
+            self.stored_items = self.organizer(self.stored_items)
+
+    def organizer(self, inventory):
+        # separates items based if their filled
+        filled_items = []
+        non_filled = []
+        for item in inventory:
+            if item.is_full:
+                filled_items.append(item)
+            else:
+                non_filled.append(item)
+        # Goes through all of the items that aren't filled
+        move_to_filled = []  # this is where the index of filled items will go to for removal
+        for item in non_filled:
+            item_name = item.name
+            matching = []
+
+            if not index in move_to_filled:  # skips items that are already in the move list
+                for same_items in non_filled:  # creates a list of matching items by name
+                    # filters
+                    name_check = same_items.name == item_name  # has the same name
+                    not_same_check = not same_items == item  # not the same as the main item
+                    index_not_check = not non_filled.index(same_items) in move_to_filled  # not in the move list
+                    not_dead = same_items.quantity != 0  # isn't zero
+
+                    if name_check and not_same_check and index_not_check and not_dead:
+                        matching.append(same_items)
+
+                if len(matching) != 0:
+
+                    # goes through matched items
+                    for sub_item in matching:
+                        if item.quantity != 0:
+                            amount_have = item.quantity
+                            leftovers = sub_item.change_quantity(amount_have)
+                            if sub_item.is_full:  # checks to see if an item is now full and place it into filled list
+                                index = non_filled.index(sub_item)
+                                filled_items.append(sub_item)
+                                move_to_filled.append(index)
+                            item.change_quantity(-amount_have + leftovers)
+                if item.quantity != 0:
+                    index = non_filled.index(item)
+                    filled_items.append(item)
+                    move_to_filled.append(index)
+        
+        # removes the items that have been placed in the move list
+        move_to_filled.sort(reverse=True)
+        for index in move_to_filled:
+            non_filled.pop(index)
+
+        return filled_items
 
 #############################################################################################################################################################################################
 ########################################################################################### Items ###########################################################################################
@@ -35,10 +106,29 @@ class Item_base:
         self.p_class = p_class
         self.element = element
 
-    def add_item(self, number):
-        # Adds a number into the item's limit
-        if self.quantity < self.limit: # checks to make sure their is space left
-            self.quantity += number
+    @property
+    def is_full(self):
+        return self.quantity >= self.limit
+
+    @property
+    def empty_space(self):
+        return self.limit - self.quantity
+
+    def change_quantity(self, number):
+        # changes the amount of items in an item stack
+        quantity = self.quantity
+        quantity += number
+
+        if quantity > self.limit:  # if the new quantity is more than 
+            left_over = quantity - self.limit  # something like 30 - 20 = 10 left overs
+            quantity = self.limit
+        elif quantity <= 0:  # if the new quantity is below quantity  
+            left_over = quantity * -1  # something like -4 * -1
+            quantity = 0
+        else:
+            left_over = 0
+        self.quantity = quantity
+        return left_over
 
     def use_item(self, number = 1):
         # uses an item getting rid of it
@@ -48,11 +138,33 @@ class Item_base:
                 del self
 
     @property
-    def print_data(self):
-        information = ( self.id, self.name, self.description, self.type, self.subtype, self.limit, self.quantity, self.location)
-        statistics = (self.length, self.attack, self.defense, self.defense, self.health, self.energy, self.speed, self.accuracy)
-        enhancements = (self.effective, self.effects, self.p_class, self.element)
-        print(f"information {information}\nstatistics {statistics}\nenhancements{enhancements}")
+    def save_data(self):
+        information = [self.id, self.name, self.description, self.type, self.subtype, self.limit, self.quantity, self.location,
+        self.length, self.attack, self.defense, self.defense, self.health, self.energy, self.speed, self.accuracy,
+        self.effective, self.effects, self.p_class, self.element]
+
+        num = 0
+        data = ""
+        for stat in (information):
+            if isinstance(stat, str):
+                text = f"'{stat}'"
+            elif isinstance(stat, Item_base):
+                text = f"{stat.id}"
+            elif isinstance(stat, bool):
+                conversions = {
+                    True : "True",
+                    False : "False"
+                }
+                text = f"'{conversions.get(stat)}'"
+            elif stat == None:
+                text = "?"
+            else:
+                text = f"{stat}"
+            if num!= len(information) -1:
+                    text += ", "
+            data += text
+            num += 1
+        return data
 
 class Medical_item(Item_base):
     def __init__(
