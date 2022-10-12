@@ -97,4 +97,21 @@
     others
         created item count test
 
+10/12/2022 1.1.0 Movement test
+    A lot of file moving
+    created a Stronghold 2 document
+    created debug file that will be used to test features
+    Main file now can run the debug menu
+    the Party Manager class in Character info can now grab the currnent selected member
+    Game_info
+        added colors for the diffent races
+        added 4 new races abyss, red flesh, devoid, and None which is a fail load_save_folder
+    created Movement file and it's features
+    created a class test to see how getting data works
+    created Movement test file to test how to make a rectangle to move
+    
+
+
+
+
     

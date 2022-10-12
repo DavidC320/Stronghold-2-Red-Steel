@@ -4,7 +4,7 @@ import os
 import json
 
 # imports from the game
-from Game_info import ally_table_s, proficiencies_table_s, item_table_s, player_jason_data, character_ids, item_ids
+from Game_info import ally_table_s, proficiencies_table_s, item_table_s, player_jason_data
 from Character_Info import Base_Character
 from Inventory import Medical_item, Equipment_item
 

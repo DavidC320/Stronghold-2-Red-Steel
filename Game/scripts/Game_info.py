@@ -29,18 +29,37 @@ item_dictionary = {
 character_races = {
     "organic" : {
         "species" : ("human"),
-        "weakness" : ("ice")
+        "weakness" : ("ice"),
+        "color" : (91, 135, 88)
     },
     
     "inorganic" : {
         "species" : ("cyborg", "walker"),
-        "weakness" : ("fire")
+        "weakness" : ("fire"),
+        "color" : (131, 131, 131)
     },
 
     "spectral" : {
         "species" : ("golem", "ghost"),
-        "weakness" : ("air")
+        "weakness" : ("air"),
+        "color" : (89, 132, 135)
     },
+
+    "abyss" : {
+        "color" : (134, 88, 135)
+    },
+
+    "red flesh" : {
+        "color" : (135, 88, 88)
+    },
+
+    "devoid" : {
+        "color" : (19, 19, 19)
+    },
+
+    None : {
+        "color" : (255, 255, 255)
+    }
 }
 
 # What elements are in the game

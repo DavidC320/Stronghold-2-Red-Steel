@@ -14,9 +14,13 @@ class Party_manager:
         self.current_member = 0
 
         self.used_ally_ids = []
+    
+    @property
+    def current_ally_class(self):
+        return self.team[self.current_member]
 
     def change_current(self, places = 1):
-        party_size = len(self.team)
+        party_size = len(self.team) -1
         self.current_member += places
         if self.current_member > party_size:
             self.current_member = 0
@@ -47,6 +51,8 @@ class Party_manager:
         for _ in range(number):
             name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin")
             races = list(character_races.keys())
+            #gets rid of none
+            races.pop(races.index(None))
             race = choice(races)
             name = choice(name_list)
             member = Base_Character(None, name, race, True, 20, 20, 5, 10, 4, 2, randint(0,4), 0, randint(0,4), 0, randint(0,4), 0,)
@@ -75,6 +81,8 @@ class Base_Character:
         self.id = id
         self.name = name  # String
         self.race = race  # String
+        color = character_races.get(self.race)
+        self.color = color.get("color")
         self.in_party = in_party  # Bool
         #self.species = species
 
@@ -84,6 +92,7 @@ class Base_Character:
         self.boosted_hitpoints = health # Int
 
         self.speed = speed  # Int
+        self.current_energy = energy 
         self.energy = energy   # Int
         self.armour = defense  # Int 
         self.attack = attack  # list / [Int, Int]
@@ -156,10 +165,6 @@ class Base_Character:
                 item_list.append(item.save_data)
         data.append(item_list)
         print(data)
-
-
-
-            
 
     @property
     def attack_roll(self): 

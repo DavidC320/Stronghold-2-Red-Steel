@@ -26,7 +26,21 @@ Plan of action
         New section
             Creating saving data for item and character classes
 
+This has been finished
+
 2. Create game play tests
+    create a debug menu
+        The debug menu is to test out different funtions of the game in one place instead of having to go to another file or play the game until
+        there
+    create player controller
+        A test for player movement
+            includes
+                controller
+                    wasd
+                    run
+                    ally switch
+                energy spending
+
     Create a combat mockup
     create area controller
     create inventory tests
