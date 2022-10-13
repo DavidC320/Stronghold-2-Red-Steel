@@ -1,10 +1,9 @@
 # 9/192022
-from turtle import left, screensize, width
 import pygame
 
 class Movement:
     def __init__(self, display, clock, player):
-        pygame.display.set_caption("Movement Test")
+        pygame.display.set_caption("Debug Menu")
         self.display = display
         self.clock = clock
         self.vel = 3
@@ -40,31 +39,50 @@ class Movement:
         keys = pygame.key.get_pressed()
         speed = self.vel
 
+        # controls
+        p_left = keys[pygame.K_LEFT] or keys[pygame.K_a]
+        p_right = keys[pygame.K_RIGHT] or keys[pygame.K_d]
+        p_up = keys[pygame.K_UP] or keys[pygame.K_w]
+        p_down = keys[pygame.K_DOWN] or keys[pygame.K_s]
+
+        p_run = keys[pygame.K_RSHIFT] or keys[pygame.K_LSHIFT]
+
+        # current condition
+        moving = p_left or p_right or p_up or p_down
+
         # running
-        if keys[pygame.K_RSHIFT] or keys[pygame.K_LSHIFT]:
+        if p_run and not self.current_ally.exhausted:
             speed = self.vel * self.run_mod
+        
+        # spends energy
+        if p_run and moving:
+            if not self.current_ally.exhausted:
+                self.current_ally.change_energy(-.2)
+        else:
+            self.current_ally.change_energy(.2)
 
         # basic movement
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        if p_left:
             self.position[0] -= speed
             if self.position[0] < self.bounds[0]:
                 self.position[0] = self.bounds[0]
 
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        if p_right:
             self.position[0] += speed
             if self.position[0] > self.bounds[1]:
                 self.position[0] = self.bounds[1]
 
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
+        if p_up:
             self.position[1] -= speed
             if self.position[1] < self.bounds[2]:
                 self.position[1] = self.bounds[2]
 
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        if p_down:
             self.position[1] += speed
             if self.position[1] > self.bounds[3]:
                 self.position[1] = self.bounds[3]
 
+        # updates the player's postilion
         self.player_rect.midbottom = self.position
 
     def draw_rectangles(self):
@@ -119,19 +137,23 @@ class Movement:
 
             # controls
             self.create_text("Controls", (255, 255, 255), (self.screen_size[0] - 120, 170))
-            self.create_text("Leader", (255, 255, 255), (6, 170))
             texts = ("w & ^ = up", "a & < = left", "s & v = down", "d & > = right", "shift = run", "f = switch")
-            y = 190
+            y = 200
             for text in texts:
                 self.create_text(text, (255, 255, 255), (self.screen_size[0] - 144, y))
                 y += 30
-            texts = (f"Name: {self.current_ally.name}",f"Race: {self.current_ally.race}", 
+
+            # player data
+            self.create_text("Leader", (255, 255, 255), (6, 170))
+            texts = (f"Party: {self.player_data.party.current_member + 1} / {len(self.player_data.party.team)}", f"Name: {self.current_ally.name}",
+            f"Race: {self.current_ally.race}", 
             f"Hp: {self.current_ally.current_health} / {self.current_ally.hitpoints}", 
-            f"Eg = {self.current_ally.current_energy} / {self.current_ally.energy}", 
+            f"Eg: {int(self.current_ally.current_energy)} / {self.current_ally.energy}", 
+            f"Tired: {self.current_ally.exhausted}",
             f"At: {self.current_ally.base_attack} + {self.current_ally.weapon.attack}",
-            f"Fight Lv: {self.current_ally.fighter_lv}", f"Hunt: {self.current_ally.hunter_lv}", f"Cast: {self.current_ally.caster_lv}"
+            f"Fight Lv: {self.current_ally.fighter_lv}", f"Hunt Lv: {self.current_ally.hunter_lv}", f"Cast Lv: {self.current_ally.caster_lv}"
             )
-            y = 190
+            y = 200
             for text in texts:
                 self.create_text(text, (255, 255, 255), (6, y))
                 y += 30

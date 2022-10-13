@@ -49,7 +49,8 @@ class Party_manager:
     def generate_allies(self, number = 4):
         party = []
         for _ in range(number):
-            name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin")
+            name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin", "Pineapple", "Eqix", "Drogos", "vilies", 
+            "Teknozes", "Flemo", "Hi World", "Trogan", "Mockery")
             races = list(character_races.keys())
             #gets rid of none
             races.pop(races.index(None))
@@ -118,6 +119,9 @@ class Base_Character:
             weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
         self.weapon = weapon # object
         # self.pocket = pocket # object
+
+        # Conditions
+        self.exhausted = False
 
     @property
     def character_save_data(self):
@@ -228,6 +232,17 @@ class Base_Character:
 
     def get_weakness(self):
         self.weakness = character_races.get(self.race).get("weakness")
+
+    def change_energy(self, number):
+        self.current_energy += number
+        if self.current_energy <= 0:
+            self.current_energy = 0
+            self.exhausted = True
+
+        elif self.current_energy > self.energy:
+            self.current_energy = self.energy
+            self.exhausted = False
+
 
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################

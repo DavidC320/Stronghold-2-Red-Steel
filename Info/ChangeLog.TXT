@@ -75,13 +75,13 @@
         added sql_versions
         fixed the item limit column to item_limit
         added json sql_versions
-        created player_jason_data dictionary
+        created player_json_data dictionary
     
     Inventory
-        Gave the Ivnetory the ability to convert item ids to numbers if none
-        organise invntories has been added along with organizer
+        Gave the Inventory the ability to convert item ids to numbers if none
+        organize inventories has been added along with organizer
         gave items is_full and empty_space
-        change_qauntity has been added into base item
+        change_quantity has been added into base item
         gave base items save_data property
 
     Player
@@ -91,8 +91,8 @@
     Save_manager
         created load_save_folder
         created create_save_folder
-        created funtions for sql loading
-        created json loading funtions
+        created functions for sql loading
+        created json loading functions
 
     others
         created item count test
@@ -102,13 +102,22 @@
     created a Stronghold 2 document
     created debug file that will be used to test features
     Main file now can run the debug menu
-    the Party Manager class in Character info can now grab the currnent selected member
+    the Party Manager class in Character info can now grab the current selected member
     Game_info
-        added colors for the diffent races
+        added colors for the different races
         added 4 new races abyss, red flesh, devoid, and None which is a fail load_save_folder
     created Movement file and it's features
     created a class test to see how getting data works
     created Movement test file to test how to make a rectangle to move
+
+10/12/2022 Later in the day 1.1.2
+    created the debug menu
+    Character_info
+        Characters can now get exhausted
+        Characters can now lose energy
+    Movement
+        Running can now cause characters to lose energy
+        More information on the current character 
     
 
 
