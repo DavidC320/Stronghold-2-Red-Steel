@@ -3,7 +3,6 @@ import pygame
 
 class Movement:
     def __init__(self, display, clock, player):
-        pygame.display.set_caption("Debug Menu")
         self.display = display
         self.clock = clock
         self.vel = 3
@@ -105,7 +104,7 @@ class Movement:
         text_rect = text.get_rect(midleft=position)
         self.display.blit(text, text_rect)
 
-    def run_debug(self):
+    def run_movement(self):
         # runs the movement test
         running = True
         while running:
@@ -147,7 +146,7 @@ class Movement:
             self.create_text("Leader", (255, 255, 255), (6, 170))
             texts = (f"Party: {self.player_data.party.current_member + 1} / {len(self.player_data.party.team)}", f"Name: {self.current_ally.name}",
             f"Race: {self.current_ally.race}", 
-            f"Hp: {self.current_ally.current_health} / {self.current_ally.hitpoints}", 
+            f"Hp: {self.current_ally.current_hp} / {self.current_ally.hp}", 
             f"Eg: {int(self.current_ally.current_energy)} / {self.current_ally.energy}", 
             f"Tired: {self.current_ally.exhausted}",
             f"At: {self.current_ally.base_attack} + {self.current_ally.weapon.attack}",

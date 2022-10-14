@@ -35,7 +35,7 @@ class Party_manager:
             if isinstance(member, Base_Character):
                 if member.id == None:
                     member.id = self.generate_id()
-                if add_to_party:
+                if add_to_party and len(self.team) <= 16:
                     self.team.append(member)
                 else:
                     self.storage.append(member)
@@ -88,8 +88,8 @@ class Base_Character:
         #self.species = species
 
         # Statistics
-        self.current_health = current_health  #Int
-        self.hitpoints = health  # Int
+        self.current_hp = current_health  #Int
+        self.hp = health  # Int
         self.boosted_hitpoints = health # Int
 
         self.speed = speed  # Int
@@ -218,16 +218,16 @@ class Base_Character:
 
     def check_character(self):
         # checks if the current character is dead
-        if self.current_health > self.boosted_hitpoints:
-            self.current_health = self.boosted_hitpoints
+        if self.current_hp > self.boosted_hitpoints:
+            self.current_hp = self.boosted_hitpoints
 
-        if self.current_health <= 0:
+        if self.current_hp <= 0:
             self.dead = True
         else:
             self.dead = False
 
     def take_damage(self, number):
-        self.current_health -= number
+        self.current_hp -= number
         self.check_character()
 
     def get_weakness(self):

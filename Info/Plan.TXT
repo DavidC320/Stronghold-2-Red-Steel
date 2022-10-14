@@ -42,6 +42,32 @@ This has been finished
                 energy spending
 
     Create a combat mockup
+        This test is to make a simulator where two teams will fight each other
+            Includes
+            two teams Player / Enemies
+            Damage
+                Weaknesses
+                taking Damage
+            controller
+                options controller
+                    Attack
+                        Left weapon
+                        Right weapon
+                        Both weapon
+                    Defend
+                        defend
+                    Run Away
+                        Run away
+                    Use Item
+                        Use pocket Item
+                            Use left pocket
+                            Use right pocket
+                        Use Inventory Item
+            Display Player's team and Enemy team
+            Enemy Ai ?
+                Enemy Behavior
+                    What they can do
+
     create area controller
     create inventory tests
     create party changer tests

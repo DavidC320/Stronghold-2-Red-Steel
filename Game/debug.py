@@ -2,7 +2,7 @@
 import pygame
 from pygame import mixer
 
-from scripts import Movement, Player
+from scripts import Movement, Player, Combat
 
 pygame.init()
 
@@ -17,6 +17,7 @@ class Debug_menu:
 
         # Classes
         self.player = Player.Player()
+        self.combat = Combat.Combat(self.display, self.clock, self.player)
         self.move_test = Movement.Movement(self.display,  self.clock, self.player)
 
         # options information
@@ -81,8 +82,11 @@ class Debug_menu:
             self.create_text("Strong Hold 2 Debug Menu", "Yellow", (self.display_size[0] / 2, 20))
 
             if testing:
-                if self.options[self.current] == "Movement":
-                    testing = self.move_test.run_debug()
+                operation = self.options[self.current]
+                if operation == "Movement":
+                    testing = self.move_test.run_movement()
+                elif operation == "Combat":
+                    testing = self.combat.run_combat()
                 else:
                     testing = False
 

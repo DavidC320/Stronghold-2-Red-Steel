@@ -118,6 +118,14 @@
     Movement
         Running can now cause characters to lose energy
         More information on the current character 
+
+10/14/2022 1.2.0
+    Added combat test into debug menu
+    The player's team can have a max of 16 party members but can only control 4
+    The  character classes health has been changed to hp for convenance
+    Created the combat object to test combat
+        created team member icons, includes name and health
+        created buttons for actions
     
 
 

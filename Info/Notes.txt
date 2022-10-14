@@ -77,3 +77,10 @@ I think I just wasted my time.
     I think the best way to fix this problem is to make a way to stoere the used ids so that the code can use them.
     I can't use a json file to do that becasue that's alot of opeing and closing and updating a single file and I want to keep that a minimum so I need to create
     a way in a player class that can keep that data inside or store it in the party class.
+
+10/14/2022
+    I'm starting to make the combat test for the game but I have no idea of how to approach this issue
+    I want to create 4 basic actions that a player can use, attack, defend, use item, and run
+    but each of these has their own sub actions except for defend
+    I need a way to know which action a player wants to take and from their I can just use those subactions to make a move
+    so just a mode to manage sub actions
