@@ -84,3 +84,8 @@ I think I just wasted my time.
     but each of these has their own sub actions except for defend
     I need a way to know which action a player wants to take and from their I can just use those subactions to make a move
     so just a mode to manage sub actions
+
+10/15/2022
+    I'm finaly going to add anemeis into the game but I need a way to add them to the field but that would include a rect of each
+    and it would be unique for each.
+    I think the best way to do this is to make a create enemy funtion that makes a clone of the enemy and places them on the rectangle

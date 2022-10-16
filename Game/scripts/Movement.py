@@ -1,6 +1,8 @@
 # 9/192022
 import pygame
 
+from Tool_box import create_text
+
 class Movement:
     def __init__(self, display, clock, player):
         self.display = display
@@ -90,7 +92,7 @@ class Movement:
             (self.current_ally.color, self.player_rect, 0),  # Player
             ((0, 0, 255), (0, 0, self.screen_size[0], 160), 2),  # Map bar
             ((0, 255, 0), (0, 160, 150, self.screen_size[1] - 160), 2),  # Current member stats
-            ((255, 0, 0), (self.screen_size[0] - 150, 160, 160, self.screen_size[1] - 160), 2),  # controls
+            ((255, 0, 0), (self.screen_size[0] - 150, 160, 150, self.screen_size[1] - 160), 2),  # controls
             ((255, 255, 255), self.map_border, 2)
         )
         for rects in list_of_rects:
@@ -98,11 +100,6 @@ class Movement:
             t_rect = rects[1]
             width = rects[2]
             pygame.draw.rect(self.display, color, t_rect, width)
-
-    def create_text(self, text, color, position):
-        text = self.font.render(text, False, color)
-        text_rect = text.get_rect(midleft=position)
-        self.display.blit(text, text_rect)
 
     def run_movement(self):
         # runs the movement test
@@ -135,15 +132,15 @@ class Movement:
             self.display.blit(text, text_rect)
 
             # controls
-            self.create_text("Controls", (255, 255, 255), (self.screen_size[0] - 120, 170))
+            create_text(self.display, "Controls", (255, 255, 255), (self.screen_size[0] - 120, 170), "topleft")
             texts = ("w & ^ = up", "a & < = left", "s & v = down", "d & > = right", "shift = run", "f = switch")
             y = 200
             for text in texts:
-                self.create_text(text, (255, 255, 255), (self.screen_size[0] - 144, y))
+                create_text(self.display, text, (255, 255, 255), (self.screen_size[0] - 144, y), "topleft")
                 y += 30
 
             # player data
-            self.create_text("Leader", (255, 255, 255), (6, 170))
+            create_text(self.display, "Leader", (255, 255, 255), (6, 170), "topleft")
             texts = (f"Party: {self.player_data.party.current_member + 1} / {len(self.player_data.party.team)}", f"Name: {self.current_ally.name}",
             f"Race: {self.current_ally.race}", 
             f"Hp: {self.current_ally.current_hp} / {self.current_ally.hp}", 
@@ -154,7 +151,7 @@ class Movement:
             )
             y = 200
             for text in texts:
-                self.create_text(text, (255, 255, 255), (6, y))
+                create_text(self.display, text, (255, 255, 255), (6, y), "topleft")
                 y += 30
 
             pygame.display.update()

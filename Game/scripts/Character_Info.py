@@ -1,7 +1,8 @@
 # 9/192022
+from random import choice, randint
+
 from Game_info import character_races
 from Inventory import Equipment_item, Item_base
-from random import choice, randint
 
 class Party_manager:
     def __init__(self, team_limit = 4):
@@ -35,7 +36,7 @@ class Party_manager:
             if isinstance(member, Base_Character):
                 if member.id == None:
                     member.id = self.generate_id()
-                if add_to_party and len(self.team) <= 16:
+                if add_to_party and len(self.team) < 16:
                     self.team.append(member)
                 else:
                     self.storage.append(member)
@@ -50,7 +51,8 @@ class Party_manager:
         party = []
         for _ in range(number):
             name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin", "Pineapple", "Eqix", "Drogos", "vilies", 
-            "Teknozes", "Flemo", "Hi World", "Trogan", "Mockery")
+            "Teknozes", "Flemo", "Hi World", "Trogan", "Mockery", "Enix", "Gobo", "Tekneka", "Inplis", "Secsar", "Floob", "Trog", "Aris",
+            "Axel", "John", "Emile", "Jane", "William", "Null", "?")
             races = list(character_races.keys())
             #gets rid of none
             races.pop(races.index(None))
@@ -76,52 +78,49 @@ class Base_Character:
     def __init__(self, id, name, race, in_party, 
     current_health, health, speed, energy, defense, attack, 
     fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp, 
-    head = None, body = None, legs = None, weapon = None, pocket = None
+    head = None, body = None, legs = None, l_weapon = None, r_weapon = None, l_pocket = None, r_pocket = None
     ):
         # Information
-        self.id = id
-        self.name = name  # String
-        self.race = race  # String
+        self.id = id  # what sql row they belong to
+        self.name = name
+        self.race = race  # gets what weaknesses a character has
         color = character_races.get(self.race)
         self.color = color.get("color")
         self.in_party = in_party  # Bool
-        #self.species = species
+        self.species = None  # Strings
 
         # Statistics
-        self.current_hp = current_health  #Int
-        self.hp = health  # Int
-        self.boosted_hitpoints = health # Int
-
-        self.speed = speed  # Int
-        self.current_energy = energy 
-        self.energy = energy   # Int
-        self.armour = defense  # Int 
-        self.attack = attack  # list / [Int, Int]
+        self.current_hp = current_health  # How much health is left
+        self.hp = health  # Maximum health
+        self.current_energy = energy   # How much energy is left
+        self.energy = energy   # Maximum energy
+        self.boosted_hitpoints = health # How much maximum health has been boosted
+        self.speed = speed  # how much their action is prioritized
+        self.armour = defense  # defense
+        self.attack = attack  # base character damage
         
-        self.get_weakness()
-        self.check_character() #checks if dead
-
-        self.fighter_lv = fight_lv # Int
+        # Proficiencies
+        self.fighter_lv = fight_lv # Melee class
         self.fighter_xp = fight_xp # Int
-
-        self.hunter_lv = hunt_lv # Int
+        self.hunter_lv = hunt_lv # Ranged class
         self.hunter_xp = hunt_xp # Int
-
-        self.caster_lv = cast_lv # Int
+        self.caster_lv = cast_lv # Magic class
         self.caster_xp = cast_xp # Int
 
         # Equipment
         self.head = head  # object / None
         self.body = body # object / None
         self.legs = legs # object / None
-
-        if weapon == None:
-            weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
-        self.weapon = weapon # object
-        # self.pocket = pocket # object
+        self.r_weapon = r_weapon  # object
+        self.r_weapon = r_weapon # object
+        self.l_pocket = l_pocket # object / None
+        self.r_pocket = r_pocket
 
         # Conditions
         self.exhausted = False
+
+        # Verifies the character
+        self.check_character()
 
     @property
     def character_save_data(self):
@@ -171,7 +170,22 @@ class Base_Character:
         print(data)
 
     @property
-    def attack_roll(self): 
+    def defense_calc(self):
+        defense = self.armour
+        for equipment in (self.head, self.body, self.legs):
+             if equipment != None:
+                defense += equipment.stat.get("defense")
+        return defense
+
+    @property
+    def base_attack(self):
+        # what is the base amount of attack a character has
+        base_attack = self.attack
+        if self.body != None:
+            base_attack += self.body.attack
+        return base_attack
+
+    def attack_roll(self, attack_style = "Left"): 
         # gets the damage that the ally will deal
         used_class = self.weapon.p_class
         proficiency_class = {
@@ -189,32 +203,24 @@ class Base_Character:
         }
         damage_threshold = proficiency.get(class_level)
 
+        # get weapon
+        weapons = {
+            "left" : (self.l_weapon.attack, self.l_weapon.accuracy),
+            "right" : (self.r_weapon.attack, self.r_weapon.accuracy),
+            "both" : (self.l_weapon.attack + self.r_weapon.attack, self.l_weapon.accuracy + self.r_weapon.accuracy / 2)
+        }
+
         # getting damage
-        base_attack = self.base_attack + self.weapon.attack
+        weapon = weapons.get()
+        base_attack = self.base_attack + weapon[0]
         low_damage = (base_attack * damage_threshold[0])
         high_damage = (base_attack * damage_threshold[1])
         damage = randint(round(low_damage), round(high_damage))
         
         accuracy_pull = randint(1, 100)
-        if accuracy_pull > self.weapon.accuracy:
+        if accuracy_pull > weapon[1]:
             damage = 0
         return damage
-
-    @property
-    def defense_calc(self):
-        defense = self.armour
-        for equipment in (self.head, self.body, self.legs):
-             if equipment != None:
-                defense += equipment.stat.get("defense")
-        return defense
-
-    @property
-    def base_attack(self):
-        # what is the base amount of attack a character has
-        base_attack = self.attack
-        if self.body != None:
-            base_attack += self.body.attack
-        return base_attack
 
     def check_character(self):
         # checks if the current character is dead
@@ -225,6 +231,14 @@ class Base_Character:
             self.dead = True
         else:
             self.dead = False
+
+        # checks if the weapons are usable
+        if self.l_pocket == None:
+            self.l_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
+        if self.l_pocket == None:
+            self.l_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
+        
+        self.get_weakness()
 
     def take_damage(self, number):
         self.current_hp -= number
@@ -242,7 +256,6 @@ class Base_Character:
         elif self.current_energy > self.energy:
             self.current_energy = self.energy
             self.exhausted = False
-
 
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################
