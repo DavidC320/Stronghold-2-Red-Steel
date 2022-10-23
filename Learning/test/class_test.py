@@ -22,3 +22,10 @@ class Main:
         print(self.test1.number, self.test2.test.number, self.test2.number, self.test3.test.test.number)
 
 Main().test_data()
+
+a = "A"
+b = "a"
+if a and b != None:
+    print(True)
+else:
+    print(False)

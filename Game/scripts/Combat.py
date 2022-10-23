@@ -15,6 +15,8 @@ class Combat:
         self.player_data = player
         if len(self.player_data.party.team) <= 0:
             self.player_data.party.generate_allies()
+        self.current_ally = self.player_data.party.current_ally_class
+
         # Enemy 
         self.enemy_data = Enemy()
         if len(self.enemy_data.party.team) <= 0:
@@ -24,18 +26,25 @@ class Combat:
         self.state_list = ("Intro", "Player", "Enemy", "Win", "Lose", "Escape")
         self.state = "Intro"
 
-        # options)
+        # options
         self.action_dict = {
-            "Attack" : ("Left Weapon", "Both Weapon", "Right Weapon"),
+            "Attack" : {
+                "Left weapon" : self.current_ally.can_use_weapon("left"),
+                "Both weapon" : self.current_ally.can_use_weapon("both"), 
+                "Right weapon" : self.current_ally.can_use_weapon("right")},
             "Defend" : "Select a party member to defend",
-            "Item" : ("Use Left Pocket", "Use Inventory", "Use Right Pocket"),
-            "Run" : ("Don't Run Away", "Run Away")
+            "Item" : {
+                "Use left pocket" : self.current_ally.can_use_pocket("left"), 
+                "Use inventory" : len(self.player_data.inventory.inventory) > 0, 
+                "Use right pocket" : self.current_ally.can_use_pocket("right")},
+            "Run" : ("Don't run away", "Run away")
         }
         self.basic_actions = list(self.action_dict.keys())
-        self.attack_actions = self.action_dict.get("Attack")
-        self.use_Item_actions = self.action_dict.get("Item")
-        self.run_away_actions = self.action_dict.get("Run")
-        self.modes = (None, "Attack", "Defend", "Run", "Item")
+        # actions
+        self.attack_actions = list(self.action_dict.get("Attack").keys())  # problem
+        self.use_item_actions = list(self.action_dict.get("Item").keys())  # problem
+        self.run_away_actions = self.action_dict.get("Run")  # problem
+        # current settings
         self.mode = None
         self.selected = 0
 
@@ -92,16 +101,17 @@ class Combat:
             self.draw_button(self.basic_actions, 2, 2)
 
         elif self.mode == "Attack":
-            self.draw_button(self.attack_actions, column=3)
+            self.draw_button(self.action_dict.get("Attack"), column=3)
 
         elif self.mode == "Defend":
             create_text(self.display, "Select a party member to defend", "white", self.control_panel.center)
 
         elif self.mode == "Run":
-            self.draw_button(self.run_away_actions, column= 2)
+            self.draw_button(self.action_dict.get("Run"), column= 2)
 
         elif self.mode == "Item":
-            self.draw_button(self.use_Item_actions, column= 3)
+            self.draw_button(self.action_dict.get("Item"), column= 3)
+
 
     def draw_button(self, options, row = 1, column = 1):
         # This draws the buttons for the game
@@ -110,7 +120,14 @@ class Combat:
         control_panel_pos = self.control_panel.topleft
         x = control_panel_pos[0]
         y = control_panel_pos[1]
-
+        if isinstance(options, dict):
+            dict_ = options
+            options = list(options.keys())
+            is_dict = True
+            print(dict_)
+        else:
+            is_dict =  False
+        print(options)
         num = 0
         button_size = (control_panel_size[0]/ column, control_panel_size[1]/ row)
         for option in options:
@@ -119,9 +136,16 @@ class Combat:
                 y += button_size[1]
             button = pygame.Rect(x, y, button_size[0], button_size[1])
             if num == self.selected:
-                color = "Green"
+                if is_dict and dict_.get(option) == False:
+                    color = "Red"
+                else:
+                    color = "Green"
+            
             else:
-                color = "Yellow"
+                if is_dict and dict_.get(option) == False:
+                    color = "Grey"
+                else:
+                    color = "Yellow"
             pygame.draw.rect(self.display, color, button, 5)
             create_text(self.display, option, "White", button.center)
             x += button_size[0]
@@ -149,7 +173,7 @@ class Combat:
                     self.change_selected(-1, self.run_away_actions)
 
                 elif self.mode == "Item": # item action
-                    self.change_selected(-1, self.use_Item_actions)
+                    self.change_selected(-1, self.use_item_actions)
             
             elif event.key == pygame.K_RIGHT:
                 if self.mode == None: # selecting action
@@ -162,7 +186,7 @@ class Combat:
                     self.change_selected(1, self.run_away_actions)
 
                 elif self.mode == "Item": # item action
-                    self.change_selected(1, self.use_Item_actions)
+                    self.change_selected(1, self.use_item_actions)
 
             elif event.key == pygame.K_UP:
                 if self.mode == None: # selecting action

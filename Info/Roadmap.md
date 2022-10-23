@@ -1,0 +1,77 @@
+# Plan of action
+## Setup | *Completed*
+* Set up game play classes.
+    * ~~character classes~~
+    * ~~Item classes~~
+    * ~~Player class~~
+    * ~~Inventory class~~
+    * ~~Start creating a SQL database as a reference~~
+    * ~~load and save classes~~
+        * I want to create a dynamic SQL database that can be easily modified to have more columns.
+        * I also want to make the player save file a whole folder that includes the SQL database and a JSON file for general information
+        * To make this I will need to figure out how create player save folders and then to add files into that folder.
+        * This folder will contain
+            * SQL database -
+                * Allies
+                * Proficiencies
+                * items
+            * Player JSON file - last thing until 1.0.0 - 
+                * Money
+    * New section
+        * ~~Creating saving data for item and character classes~~
+
+# Create game play tests
+* ~~create a debug menu~~
+    * The debug menu is to test out different funtions of the game in one place instead of having to go to another file or play the game until there
+* ~~create player controller~~
+    * A test for player movement
+        * includes
+            * controller
+                * wasd
+                * run 
+                * ally switch
+            * energy spending
+* Create a combat mockup
+    * This test is to make a simulator where two teams will fight    each other
+        * Includes
+        * two teams Player / Enemies
+        * Damage
+            * Weaknesses
+            * taking Damage
+        * controller
+            * options controller
+                * Attack
+                    * Left weapon
+                    * Right weapon
+                    * Both weapon
+                * Defend
+                    * defend
+                * Run Away
+                    * Run away
+                * Use Item
+                    * Use pocket Item
+                        * Use left pocket
+                        * Use right pocket
+                    * Use Inventory Item
+        * Display Player's team and Enemy team
+        * Enemy Ai ?
+            * Enemy Behavior
+                What they can do
+* create area controller
+* create inventory tests
+* create party changer tests
+* create NPC test
+
+# Create the game
+    Add the game play systems
+
+# Create simple game interface
+    Create UI for the game
+        Start
+        options
+        create file
+        load file
+        quit
+        main UI
+
+# Create better map

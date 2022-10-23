@@ -89,3 +89,8 @@ I think I just wasted my time.
     I'm finaly going to add anemeis into the game but I need a way to add them to the field but that would include a rect of each
     and it would be unique for each.
     I think the best way to do this is to make a create enemy funtion that makes a clone of the enemy and places them on the rectangle
+
+10/16/2022
+    I'm getting very frustrated with how this action funtion is working and I need to complety redo how I make those actions
+    I need to make a funtion that goes through all of the actions and subactions to see if they can be done then create buttons around that
+        create a list of usable actions and buttons that grey out when unable to be used

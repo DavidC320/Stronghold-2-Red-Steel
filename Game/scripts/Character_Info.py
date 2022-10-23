@@ -13,11 +13,12 @@ class Party_manager:
         # important information
         self.team_limit = team_limit  # How many allies can be in a party at once
         self.current_member = 0
-
         self.used_ally_ids = []
     
     @property
     def current_ally_class(self):
+        print(len(self.team))
+        print(self.team[self.current_member])
         return self.team[self.current_member]
 
     def change_current(self, places = 1):
@@ -233,10 +234,10 @@ class Base_Character:
             self.dead = False
 
         # checks if the weapons are usable
-        if self.l_pocket == None:
+        if self.r_weapon == None:
             self.l_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
-        if self.l_pocket == None:
-            self.l_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
+        if self.r_weapon == None:
+            self.r_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
         
         self.get_weakness()
 
@@ -256,6 +257,37 @@ class Base_Character:
         elif self.current_energy > self.energy:
             self.current_energy = self.energy
             self.exhausted = False
+
+    def can_use_weapon(self, hand):
+        items = {
+            "left" : self.l_weapon,
+            "right" : self.r_weapon,
+            "both" : (self.l_weapon, self.r_weapon)
+        }
+        item = items.get(hand)
+        if hand != "both":
+            if item == None:
+                return False
+            elif item.subtype == "weapon":
+                return True
+        else:
+            if item[0] and item[1] == None:
+                return False
+            elif (item[0].subtype == "weapon") and (item[1].subtype == "weapon"):
+                return True
+
+    def can_use_pocket(self, hand):
+        items = {
+            "left" : self.l_pocket,
+            "right" : self.r_pocket,
+        }
+        item = items.get(hand)
+        if hand != "both":
+            if item == None:
+                return False
+            elif issubclass(item, Item_base):
+                return True
+            
 
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################
