@@ -1,7 +1,7 @@
 # 9/192022
 import pygame
 
-from Tool_box import create_text
+from Game_scripts.Tool_box import create_text
 
 class Movement:
     def __init__(self, display, clock, player):
@@ -13,7 +13,7 @@ class Movement:
         # player_data
         self.player_data = player
         if len(self.player_data.party.team) <= 0:
-            self.player_data.party.generate_allies()
+            self.player_data.party.generate_allies(16)
 
         # what character is currently selceted
         self.current_ally = self.player_data.party.current_ally_class
@@ -146,7 +146,7 @@ class Movement:
             f"Hp: {self.current_ally.current_hp} / {self.current_ally.hp}", 
             f"Eg: {int(self.current_ally.current_energy)} / {self.current_ally.energy}", 
             f"Tired: {self.current_ally.exhausted}",
-            f"At: {self.current_ally.base_attack} + {self.current_ally.weapon.attack}",
+            #f"At: {self.current_ally.base_attack} + {self.current_ally.weapon.attack}",
             f"Fight Lv: {self.current_ally.fighter_lv}", f"Hunt Lv: {self.current_ally.hunter_lv}", f"Cast Lv: {self.current_ally.caster_lv}"
             )
             y = 200

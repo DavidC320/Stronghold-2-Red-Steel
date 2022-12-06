@@ -1,10 +1,10 @@
 # 9/21/2022
 from random import randint
 
-from Character_Info import Party_manager
-from Inventory import Inventory
-from Save_manager import Save_file_manager
-from Enemies import Enemy_rectangel
+from Game_scripts.Character_Info import Party_manager
+from Game_scripts.Inventory import Inventory
+from Game_scripts.Save_manager import Save_file_manager
+from Game_scripts.Enemies import Enemy_rectangel
 
 class Team_base:
     def __init__(self):

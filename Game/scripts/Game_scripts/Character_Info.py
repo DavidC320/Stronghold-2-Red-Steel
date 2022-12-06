@@ -4,6 +4,19 @@ from random import choice, randint
 from Game_info import character_races
 from Inventory import Equipment_item, Item_base
 
+def build_character(dictionary):
+    a = dictionary
+    if isinstance(a, dict):
+        character = Base_Character(
+            a.get("id"), a.get("name"), a.get("race"), a.get("location"), 
+            a.get("level"), a.get("xp"), a.get("health"), a.get("max_health"), a.get("speed"), a.get("energy"), a.get("defense"), a.get("attack"), 
+            a.get("fighter_level"), a.get("fighter_xp"), a.get("hunter_level"), a.get("hunter_xp"), a.get("caster_level"), a.get("caster_xp"),
+            a.get("head"), a.get("body"), a.get("legs"), a.get("l_weapon"), a.get("r_weapon"), a.get("l_pocket"), a.get("r_pocket")
+            )
+    else:
+        return
+    return character
+
 class Party_manager:
     def __init__(self, team_limit = 4):
         # allies
@@ -17,8 +30,6 @@ class Party_manager:
     
     @property
     def current_ally_class(self):
-        print(len(self.team))
-        print(self.team[self.current_member])
         return self.team[self.current_member]
 
     def change_current(self, places = 1):
@@ -59,7 +70,7 @@ class Party_manager:
             races.pop(races.index(None))
             race = choice(races)
             name = choice(name_list)
-            member = Base_Character(None, name, race, True, 20, 20, 5, 10, 4, 2, randint(0,4), 0, randint(0,4), 0, randint(0,4), 0,)
+            member = Base_Character(None, name, race, "party", None, 0, 0, randint(5, 20), 20, randint(1, 5), 20, 5, randint(1, 5), randint(0, 4), 0, randint(0, 4), 0, randint(0, 4), 0)
             party.append(member)
         self.add_members(party)
 
@@ -72,25 +83,34 @@ class Party_manager:
         id = ids[-1] + 1
         self.used_ally_ids.append(id)
         return id
+
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################
 #############################################################################################################################################################################
+
 class Base_Character:
-    def __init__(self, id, name, race, in_party, 
-    current_health, health, speed, energy, defense, attack, 
-    fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp, 
+    def __init__(
+    # Information
+    self, id, name, race, location, species,
+    # Stats
+    level, xp, current_health, health, speed, energy, defense, attack, 
+    # Proficiencies
+    fight_lv, fight_xp, hunt_lv, hunt_xp, cast_lv, cast_xp,
+    # Equipment 
     head = None, body = None, legs = None, l_weapon = None, r_weapon = None, l_pocket = None, r_pocket = None
     ):
         # Information
         self.id = id  # what sql row they belong to
         self.name = name
         self.race = race  # gets what weaknesses a character has
+        self.location = location  # Bool
+        self.species = species  # Strings
         color = character_races.get(self.race)
         self.color = color.get("color")
-        self.in_party = in_party  # Bool
-        self.species = None  # Strings
 
         # Statistics
+        self.level = level
+        self.xp = xp
         self.current_hp = current_health  # How much health is left
         self.hp = health  # Maximum health
         self.current_energy = energy   # How much energy is left
@@ -101,45 +121,59 @@ class Base_Character:
         self.attack = attack  # base character damage
         
         # Proficiencies
-        self.fighter_lv = fight_lv # Melee class
-        self.fighter_xp = fight_xp # Int
-        self.hunter_lv = hunt_lv # Ranged class
-        self.hunter_xp = hunt_xp # Int
-        self.caster_lv = cast_lv # Magic class
-        self.caster_xp = cast_xp # Int
+        # Classes
+        # Melee
+        self.fighter_lv = fight_lv
+        self.fighter_xp = fight_xp
+        # Ranged
+        self.hunter_lv = hunt_lv
+        self.hunter_xp = hunt_xp
+        # Magic
+        self.caster_lv = cast_lv
+        self.caster_xp = cast_xp
 
         # Equipment
-        self.head = head  # object / None
-        self.body = body # object / None
-        self.legs = legs # object / None
-        self.r_weapon = r_weapon  # object
-        self.r_weapon = r_weapon # object
-        self.l_pocket = l_pocket # object / None
+        self.head = head 
+        self.body = body 
+        self.legs = legs 
+        self.l_weapon = l_weapon  
+        self.r_weapon = r_weapon 
+        self.l_pocket = l_pocket 
         self.r_pocket = r_pocket
 
         # Conditions
         self.exhausted = False
+        self.status_effects = []
 
         # Verifies the character
         self.check_character()
 
     @property
     def character_save_data(self):
-        if self.weapon.name == "Fist":
-            weapon = None
+        # This creates a SQL record
+        if self.l_weapon.name == "Fist":
+            l_weapon = None
         else:
-            weapon = self.weapon
+            l_weapon = self.l_weapon
+        if self.r_weapon.name == "Fist":
+            r_weapon = None
+        else:
+            r_weapon = self.r_weapon
+            
+        player_data = (
+            # Information
+            self.id, self.name, self.race, self.location,
+            # Statistics
+            self.level, self.xp, self.current_hp, self.hp, self.speed, self.energy, self.armour, self.attack, 
+            # class
+            self.fighter_lv, self.fighter_xp, self.hunter_lv, self.hunter_xp, self.caster_lv, self.caster_xp,
+            # Equipment
+            self.head, self.body, self.legs, l_weapon, r_weapon, self.l_pocket, self.r_pocket
+            )
 
-        ally_data = ""
-        player_data = (self.id, self.name, self.race, self.in_party,
-        self.current_health, self.hitpoints, self.speed, self.energy, self.armour, self.attack, 
-        self.head, self.body, self.legs, weapon)
-
-        prof_data = (self.fighter_lv, self.fighter_xp, self.hunter_lv, self.hunter_xp, self.caster_lv, self.caster_xp)
-        items = (self.head, self.body, self.legs, weapon)
         data = []
-        for data_set in (player_data, prof_data):
-            text_data = ""
+        for data_set in (player_data):
+            text_data = ""                                                       
             num = 0
             for stat in data_set:
                 if isinstance(stat, str):
@@ -162,6 +196,9 @@ class Base_Character:
                 num += 1
             data.append(text_data)
 
+        
+        items = (self.head, self.body, self.legs, l_weapon, r_weapon, self.l_pocket, self.r_pocket)
+
         # items
         item_list = []
         for item in items:
@@ -172,6 +209,7 @@ class Base_Character:
 
     @property
     def defense_calc(self):
+        # This counts how many defense points a character has
         defense = self.armour
         for equipment in (self.head, self.body, self.legs):
              if equipment != None:
@@ -186,15 +224,27 @@ class Base_Character:
             base_attack += self.body.attack
         return base_attack
 
-    def attack_roll(self, attack_style = "Left"): 
+    def attack_roll(self, attack_style = "left"): 
         # gets the damage that the ally will deal
-        used_class = self.weapon.p_class
+        weapons = {
+            "left" : (self.l_weapon),
+            "right" : (self.r_weapon),
+            "both" : (self.l_weapon, self.r_weapon)
+        }
+        used_weapons = weapons.get(attack_style)
+        damage = 0
+        for weapon in used_weapons:
+            damage += self.get_damage(weapon)
+        
+        return damage
+
+    def get_damage(self, weapon):
+        # gets the damage from a weapon
         proficiency_class = {
             "fighter" : self.fighter_lv,
             "hunter" : self.hunter_lv,
             "caster" : self.caster_lv
         }
-        class_level = proficiency_class.get(used_class)
         proficiency = {
             0 : (.0, .20),
             1 : (.20, .40),
@@ -202,25 +252,17 @@ class Base_Character:
             3 : (.60, .80),
             4 : (.80, 1.00)
         }
-        damage_threshold = proficiency.get(class_level)
+        damage_threshold = proficiency.get(proficiency_class.get(weapon.effective))
 
-        # get weapon
-        weapons = {
-            "left" : (self.l_weapon.attack, self.l_weapon.accuracy),
-            "right" : (self.r_weapon.attack, self.r_weapon.accuracy),
-            "both" : (self.l_weapon.attack + self.r_weapon.attack, self.l_weapon.accuracy + self.r_weapon.accuracy / 2)
-        }
+        base_damage = self.base_attack + weapon.attack
+        low_damage = round(base_damage * damage_threshold[0])
+        high_damage = round(base_damage * damage_threshold[1])
+        damage = randint(low_damage, high_damage)
 
-        # getting damage
-        weapon = weapons.get()
-        base_attack = self.base_attack + weapon[0]
-        low_damage = (base_attack * damage_threshold[0])
-        high_damage = (base_attack * damage_threshold[1])
-        damage = randint(round(low_damage), round(high_damage))
-        
         accuracy_pull = randint(1, 100)
-        if accuracy_pull > weapon[1]:
+        if accuracy_pull > weapon.accuracy:
             damage = 0
+
         return damage
 
     def check_character(self):
@@ -235,9 +277,10 @@ class Base_Character:
 
         # checks if the weapons are usable
         if self.r_weapon == None:
-            self.l_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
+            self.l_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, effective="fighter")
+
         if self.r_weapon == None:
-            self.r_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, p_class="fighter")
+            self.r_weapon = Equipment_item(None, "Fist", "Better then nothing", "weapon", "equipped", 4, accuracy=50, effective="fighter")
         
         self.get_weakness()
 

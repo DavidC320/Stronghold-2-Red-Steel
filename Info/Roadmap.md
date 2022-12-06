@@ -1,77 +1,37 @@
-# Plan of action
-## Setup | *Completed*
-* Set up game play classes.
-    * ~~character classes~~
-    * ~~Item classes~~
-    * ~~Player class~~
-    * ~~Inventory class~~
-    * ~~Start creating a SQL database as a reference~~
-    * ~~load and save classes~~
-        * I want to create a dynamic SQL database that can be easily modified to have more columns.
-        * I also want to make the player save file a whole folder that includes the SQL database and a JSON file for general information
-        * To make this I will need to figure out how create player save folders and then to add files into that folder.
-        * This folder will contain
-            * SQL database -
-                * Allies
-                * Proficiencies
-                * items
-            * Player JSON file - last thing until 1.0.0 - 
-                * Money
-    * New section
-        * ~~Creating saving data for item and character classes~~
+# RoadMap version 1.1
 
-# Create game play tests
-* ~~create a debug menu~~
-    * The debug menu is to test out different funtions of the game in one place instead of having to go to another file or play the game until there
-* ~~create player controller~~
-    * A test for player movement
-        * includes
-            * controller
-                * wasd
-                * run 
-                * ally switch
-            * energy spending
-* Create a combat mockup
-    * This test is to make a simulator where two teams will fight    each other
-        * Includes
-        * two teams Player / Enemies
-        * Damage
-            * Weaknesses
-            * taking Damage
-        * controller
-            * options controller
-                * Attack
-                    * Left weapon
-                    * Right weapon
-                    * Both weapon
-                * Defend
-                    * defend
-                * Run Away
-                    * Run away
-                * Use Item
-                    * Use pocket Item
-                        * Use left pocket
-                        * Use right pocket
-                    * Use Inventory Item
-        * Display Player's team and Enemy team
-        * Enemy Ai ?
-            * Enemy Behavior
-                What they can do
-* create area controller
-* create inventory tests
-* create party changer tests
-* create NPC test
+## 1. Build the Back End
 
-# Create the game
-    Add the game play systems
+    Create the games classes and functions to make the game easy to use.
 
-# Create simple game interface
-    Create UI for the game
-        Start
-        options
-        create file
-        load file
-        quit
-        main UI
+## 2. Build the Debug Menu
 
-# Create better map
+    Create several tests to make sure the game works in it's key components
+
+* Movement tile based
+* Movement free based
+* Combat
+* Party manager
+* Inventory manager
+
+## 3. Build Stronghold 2 Beta
+
+    Create a beta build of the game
+
+Combine all of the systems in the debug menu into a functional game.
+
+## 4. Build the mod tool
+
+    Create a easy way for a user to create custom content for the game
+
+* Map creator
+* Enemy creator
+* Item creator
+
+## 5. Build Stronghold Blue Iron
+
+    Create a simple Tkinter game that is just the original concept of Stronghold
+
+## 6. Build Stronghold 2 Red Steel
+
+    Create the final build of Stronghold and update it.

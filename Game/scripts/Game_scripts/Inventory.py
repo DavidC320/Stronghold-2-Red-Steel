@@ -1,6 +1,30 @@
 # 9/192022
 
 
+def item_converter(self, i):
+        # converts item dictionaries into items
+        item_type = i.get("type")
+
+        if item_type == "equipment":
+            item = Equipment_item(
+                # Information
+                i.get("id"), i.get("name"), i.get("description"), i.get("subtype"), i.get("location"), i.get("attack"), 
+                # Stats
+                i.get("defense"), i.get("health"), i.get("energy"), i.get("speed"), i.get("accuracy"), 
+                # enhancements
+                i.get("effects"), i.get("player_class"), i.get("element"))
+
+        elif item_type == "medical":
+            item = Medical_item(
+                # Information
+                i.get("id"), i.get("name"), i.get("description"), i.get("subtype"), i.get("item_limit"), i.get("quantity"), i.get("location"), 
+                # Stats
+                i.get("length"), i.get("attack"), i.get("defense"), i.get("health"), i.get("energy"), i.get("speed"), 
+                # enhancements
+                i.get("effective"), i.get("effects"), i.get("element"))
+        return item
+
+
 class Inventory:
     def __init__(self, inventory_limit = 20):
         # Items
@@ -78,13 +102,14 @@ class Inventory:
 
         return filled_items
 
-#############################################################################################################################################################################################
-########################################################################################### Items ###########################################################################################
-#############################################################################################################################################################################################
+############################################################################################################################################################################################
+######################################################################################## Items Base ########################################################################################
+############################################################################################################################################################################################
+
 class Item_base:
     def __init__(self, id, name, desc, type, sub, limit, quant, location,
         length = None, attack = None, defense = None, health = None, energy = None, speed = None, accuracy = None,
-        effective = None, effects = None, p_class = None, element = None):
+        effective = None, effects = None, element = None):
         # Information
         self.id = id
         self.name = name
@@ -105,39 +130,7 @@ class Item_base:
 
         self.effective = effective
         self.effects = effects
-        self.p_class = p_class
         self.element = element
-
-    @property
-    def is_full(self):
-        return self.quantity >= self.limit
-
-    @property
-    def empty_space(self):
-        return self.limit - self.quantity
-
-    def change_quantity(self, number):
-        # changes the amount of items in an item stack
-        quantity = self.quantity
-        quantity += number
-
-        if quantity > self.limit:  # if the new quantity is more than 
-            left_over = quantity - self.limit  # something like 30 - 20 = 10 left overs
-            quantity = self.limit
-        elif quantity <= 0:  # if the new quantity is below quantity  
-            left_over = quantity * -1  # something like -4 * -1
-            quantity = 0
-        else:
-            left_over = 0
-        self.quantity = quantity
-        return left_over
-
-    def use_item(self, number = 1):
-        # uses an item getting rid of it
-        if self.quantity > 0:
-            self.quantity -= number
-            if self.quantity <= 0:
-                del self
 
     @property
     def save_data(self):
@@ -168,9 +161,50 @@ class Item_base:
             num += 1
         return data
 
+    @property
+    def is_full(self):
+        # Checks if the item is full
+        return self.quantity >= self.limit
+
+    @property
+    def empty_space(self):
+        # returns how many clones of this item needs to be full
+        return self.limit - self.quantity
+
+    def change_quantity(self, number):
+        # changes the amount of items in an item stack
+        quantity = self.quantity
+        quantity += number
+
+        if quantity > self.limit:  # if the new quantity is more than 
+            left_over = quantity - self.limit  # something like 30 - 20 = 10 left overs
+            quantity = self.limit
+        elif quantity <= 0:  # if the new quantity is below quantity  
+            left_over = quantity * -1  # something like -4 * -1
+            quantity = 0
+        else:
+            left_over = 0
+        self.quantity = quantity
+        return left_over
+
+    def use_item(self, number = 1):
+        # uses an item getting rid of it
+        if self.quantity > 0:
+            self.quantity -= number
+            if self.quantity <= 0:
+                del self
+
+############################################################################################################################################################################################
+######################################################################################## Items Base ########################################################################################
+############################################################################################################################################################################################
+
+############################################################################################################################################################################################
+####################################################################################### Item Classes #######################################################################################
+############################################################################################################################################################################################
+
 class Medical_item(Item_base):
     def __init__(
-        self, id, name, desc, sub, limit, quant, location, length = None, attack = None, defense = None, health = None, energy = None, speed = None, effective = None, effects = None, element = None):
+        self, id, name, desc, sub, limit, quant, location, length = None, attack = None, defense = None, health = None, energy = None, speed = None, effective = None, effects = None):
         super().__init__(id, name, desc, "medical", sub, limit, quant, location, 
         length, 
         attack, 
@@ -180,11 +214,10 @@ class Medical_item(Item_base):
         speed, 
 
         effective= effective, 
-        effects= effects, 
-        element= element)
+        effects= effects)
 
 class Equipment_item(Item_base):
-    def __init__(self, id,  name, desc, sub, location, attack=None, defense=None, health=None, energy=None, speed=None, accuracy=None, effects=None, p_class=None, element=None):
+    def __init__(self, id,  name, desc, sub, location, attack=None, defense=None, health=None, energy=None, speed=None, accuracy=None, effective = None, effects=None, element=None):
         super().__init__(id, name, desc, "equipment", sub, 1, 1, location,
         
         attack= attack,
@@ -194,18 +227,10 @@ class Equipment_item(Item_base):
         speed= speed,
         accuracy= accuracy,
 
+        effective= effective,
         effects= effects,
-        p_class= p_class,
         element= element)
-###############################################################################################################################################################################################
-############################################################################################ Items ############################################################################################
-###############################################################################################################################################################################################
 
-##############################################################################################################################################################################################
-####################################################################################### Prebuilt items #######################################################################################
-##############################################################################################################################################################################################
-
-
-##############################################################################################################################################################################################
-####################################################################################### Prebuilt items #######################################################################################
-##############################################################################################################################################################################################
+##########################################################################################################################################################################################
+###################################################################################### Item Classes ######################################################################################
+##########################################################################################################################################################################################

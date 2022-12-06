@@ -2,7 +2,7 @@
 import pygame
 
 from Teams import Enemy
-from Tool_box import create_text
+from Game_scripts.Tool_box import create_text
 
 class Combat:
     def __init__(self, display, clock, player):
@@ -29,16 +29,17 @@ class Combat:
         # options
         self.action_dict = {
             "Attack" : {
-                "Left weapon" : self.current_ally.can_use_weapon("left"),
-                "Both weapon" : self.current_ally.can_use_weapon("both"), 
-                "Right weapon" : self.current_ally.can_use_weapon("right")},
+                "Left Weapon" : self.current_ally.can_use_weapon("left"),
+                "Both Weapon" : self.current_ally.can_use_weapon("both"), 
+                "Right Weapon" : self.current_ally.can_use_weapon("right")},
             "Defend" : "Select a party member to defend",
             "Item" : {
                 "Use left pocket" : self.current_ally.can_use_pocket("left"), 
                 "Use inventory" : len(self.player_data.inventory.inventory) > 0, 
                 "Use right pocket" : self.current_ally.can_use_pocket("right")},
-            "Run" : ("Don't run away", "Run away")
+            "Run" : ("Don't Run Away", "Run AWay")
         }
+
         self.basic_actions = list(self.action_dict.keys())
         # actions
         self.attack_actions = list(self.action_dict.get("Attack").keys())  # problem
@@ -202,9 +203,14 @@ class Combat:
                     self.selected = 0 # reverts to 
 
             elif event.key == pygame.K_BACKSPACE:
+                # Goes back
                 if self.mode in self.basic_actions:  # Only avtive when the mode is in basic actions
                     self.selected =  self.basic_actions.index(self.mode)  # sets the selected number to the last number
                     self.mode = None
+
+                # Only active when in specific actions
+                elif self.mode in (self.attack_actions):
+                    None
 
     def run_combat(self):
         running = True

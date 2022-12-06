@@ -4,9 +4,10 @@ import os
 import json
 
 # imports from the game
-from Game_info import ally_table_s, proficiencies_table_s, item_table_s, player_jason_data
-from Character_Info import Base_Character
-from Inventory import Medical_item, Equipment_item
+from SQL_data_settings import ally_table_s, item_table_s
+from JSON_data_settings import player_jason_data
+from Character_Info import build_character
+from Inventory import Medical_item, Equipment_item, item_converter
 
 class Save_file_manager:
     def __init__(self):
@@ -97,38 +98,13 @@ class Save_file_manager:
                 num += 1
             ally_list.append(ally_section)
         return ally_list
-
-    def item_converter(self, i):
-        # converts item dictionaries into items
-        item_type = i.get("type")
-
-        if item_type == "equipment":
-            item = Equipment_item(
-                # Information
-                i.get("id"), i.get("name"), i.get("description"), i.get("subtype"), i.get("location"), i.get("attack"), 
-                # Stats
-                i.get("defense"), i.get("health"), i.get("energy"), i.get("speed"), i.get("accuracy"), 
-                # enhancements
-                i.get("effects"), i.get("player_class"), i.get("element"))
-
-        elif item_type == "medical":
-            item = Medical_item(
-                # Information
-                i.get("id"), i.get("name"), i.get("description"), i.get("subtype"), i.get("item_limit"), i.get("quantity"), i.get("location"), 
-                # Stats
-                i.get("length"), i.get("attack"), i.get("defense"), i.get("health"), i.get("energy"), i.get("speed"), 
-                # enhancements
-                i.get("effective"), i.get("effects"), i.get("element"))
-        return item
     
     def create_sql_table(self):
         ally_table = f"CREATE TABLE IF NOT EXISTS Allies( {ally_table_s} )"
-        proficiencies_table = f"CREATE TABLE IF NOT EXISTS Skills( {proficiencies_table_s})"
         item_table = f"CREATE TABLE IF NOT EXISTS Items( {item_table_s} )"
-        print(ally_table, proficiencies_table, item_table)
 
         # Adds the tables
-        for action in (ally_table, proficiencies_table, item_table):
+        for action in (ally_table, item_table):
             self.curser.execute(action)
 
         self.database.commit()
@@ -139,8 +115,7 @@ class Save_file_manager:
         # Sql code from Michael Berkowski for fixes
         # This code creates a temporary table that gets the data for each stored ally in the database
         self.curser.execute("""
-        create table temp as select * from Allies 
-        inner join Skills on Allies.proficiencies = Skills.id
+        create table temp as select * from Allies
         """)
 
         # get ally information
@@ -175,13 +150,13 @@ class Save_file_manager:
 
         # converts items into object items
         # code snippet form finxter
-        inventory = [self.item_converter(i) for i in inventory_dict] # creates a list of converted inventory items
-        item_storage = [self.item_converter(i) for i in storage_dict]
+        inventory = [item_converter(i) for i in inventory_dict] # creates a list of converted inventory items
+        item_storage = [item_converter(i) for i in storage_dict]
 
         # Get's equipped items ready to be paired to allies
         equips = {}
         for i in equip_dict:
-            item = self.item_converter(i)
+            item = item_converter(i)
             
             item.print_data
             equips.update({item.id : item})
@@ -202,11 +177,7 @@ class Save_file_manager:
         party = []
         ally_storage = []
         for a in allies_dict:
-            ally = Base_Character(
-                a.get("id"), a.get("name"), a.get("race"), a.get("in_party"), 
-                a.get("health"), a.get("max_health"), a.get("speed"), a.get("energy"), a.get("defense"), a.get("attack"), 
-                a.get("fighter_level"), a.get("fighter_xp"), a.get("hunter_level"), a.get("hunter_xp"), a.get("caster_level"), a.get("caster_xp"),
-                a.get("head"), a.get("body"), a.get("legs"), a.get("weapon"))
+            ally = build_character(a)
             if ally.in_party:
                 party.append(ally)
             else:

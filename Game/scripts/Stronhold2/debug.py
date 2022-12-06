@@ -2,7 +2,9 @@
 import pygame
 from pygame import mixer
 
-from scripts import Movement, Teams, Combat
+from Movement import Movement
+from Combat import Combat
+from Teams import Player
 
 pygame.init()
 
@@ -16,9 +18,9 @@ class Debug_menu:
         self.clock = pygame.time.Clock()
 
         # Classes
-        self.player = Teams.Player()
-        self.combat = Combat.Combat(self.display, self.clock, self.player)
-        self.move_test = Movement.Movement(self.display,  self.clock, self.player)
+        self.player = Player()
+        self.combat = Combat(self.display, self.clock, self.player)
+        self.move_test = Movement(self.display,  self.clock, self.player)
 
         # options information
         self.options = ("Movement", "Combat", "Inventory", "Item storage", "Ally storage")
