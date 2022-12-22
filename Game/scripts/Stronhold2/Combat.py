@@ -1,7 +1,7 @@
 # 9/192022
 import pygame
 
-from Teams import Enemy
+from Game_scripts.Teams import Enemy
 from Game_scripts.Tool_box import create_text
 
 class Combat:
@@ -10,11 +10,7 @@ class Combat:
         self.clock = clock
         self.screen_size = self.display.get_size()
 
-        # teams
-        # player
         self.player_data = player
-        if len(self.player_data.party.team) <= 0:
-            self.player_data.party.generate_allies()
         self.current_ally = self.player_data.party.current_ally_class
 
         # Enemy 
@@ -29,14 +25,14 @@ class Combat:
         # options
         self.action_dict = {
             "Attack" : {
-                "Left Weapon" : self.current_ally.can_use_weapon("left"),
-                "Both Weapon" : self.current_ally.can_use_weapon("both"), 
-                "Right Weapon" : self.current_ally.can_use_weapon("right")},
+                "Left Weapon" : False,
+                "Both Weapon" : False, 
+                "Right Weapon" : False},
             "Defend" : "Select a party member to defend",
             "Item" : {
-                "Use left pocket" : self.current_ally.can_use_pocket("left"), 
-                "Use inventory" : len(self.player_data.inventory.inventory) > 0, 
-                "Use right pocket" : self.current_ally.can_use_pocket("right")},
+                "Use left pocket" : False, 
+                "Use inventory" : False, 
+                "Use right pocket" : False},
             "Run" : ("Don't Run Away", "Run AWay")
         }
 
@@ -57,45 +53,30 @@ class Combat:
         self.enemy_team = pygame.Rect(self.screen_size[0] - 150, 160, 150, self.screen_size[1] - 160)  # Enemy party
 
         # sut up enemies
-        area_limit = (self.arena_screen.x, self.arena_screen.x + self.arena_screen.width)
-        self.enemy_data.initialize_enemies(area_limit, self.arena_screen.midbottom[1] - 10)
+        self.area_limit = (self.arena_screen.x, self.arena_screen.x + self.arena_screen.width)
 
-    def display_members(self, team, display_rect, show_playable = True):
-        # Display the members
+    def setup_combat_icons(self, team, display_rect):
         party_4 = len(team) <= 4
         pos = display_rect.topleft
         x = pos[0]
         y = pos[1]
-        num = 0
         for member in team:
             if party_4:
-                name_size = 22
-                hp_size = name_size
-                icon = pygame.Rect(x, y, 150, 150)
-                if show_playable:
-                    pygame.draw.rect(self.display, "Cyan", icon, 6)
-                pygame.draw.rect(self.display, member.color, icon, 4)
+                member.combat_icon_pos = (x, y)
+                member.build_combat_icon(party_4)
                 y += 150
             else:
-                name_size = 14
-                hp_size = 11
                 if x > pos[0] + 75:
                     x = pos[0]
                     y += 75 
-                icon = pygame.Rect(x, y, 75, 75)
-                if num < 4 and show_playable:
-                    pygame.draw.rect(self.display, "Cyan", icon, 6)
-                pygame.draw.rect(self.display, member.color, icon, 4)
-                x += 75
-                num += 1
-            text_defualt = icon.midtop
-            # name
-            name_offset = icon.size[0] * .3
-            create_text(self.display, member.name, "white", (text_defualt[0], text_defualt[1] + name_offset ), size = name_size)
+                member.combat_icon_pos = (x, y)
+                member.build_combat_icon(party_4)
 
-            # health
-            hp_offset = icon.size[0] * .8
-            create_text(self.display, f"Hp: {member.current_hp} / {member.hp}", "white", (text_defualt[0], text_defualt[1] + hp_offset), size = hp_size)
+    def display_members(self, team, show_playable = True):
+        # Display the members
+        num = 0
+        for member in team:
+            member.display_combat_icon(self.display, num, show_playable)
 
     def draw_action_buttons(self):
         if self.mode ==  None:
@@ -125,10 +106,8 @@ class Combat:
             dict_ = options
             options = list(options.keys())
             is_dict = True
-            print(dict_)
         else:
             is_dict =  False
-        print(options)
         num = 0
         button_size = (control_panel_size[0]/ column, control_panel_size[1]/ row)
         for option in options:
@@ -214,6 +193,11 @@ class Combat:
 
     def run_combat(self):
         running = True
+        # setup icons
+        self.setup_combat_icons(self.player_data.party.team, self.player_team)
+        self.setup_combat_icons(self.enemy_data.party.team, self.enemy_team)
+        self.enemy_data.combat_initialize_field_team(self.area_limit, self.arena_screen.midbottom[1] - 10)
+        
         while running:
             self.clock.tick(60)  # This sets up framerate
 
@@ -233,15 +217,15 @@ class Combat:
 
             # Player data
             pygame.draw.rect(self.display, (0, 255, 0), self.player_team, 2)
-            self.display_members(self.player_data.party.team, self.player_team)
+            self.display_members(self.player_data.party.team)
 
             # Enemy Data
             pygame.draw.rect(self.display, "Red", self.enemy_team, 2)
-            self.display_members(self.enemy_data.party.team, self.enemy_team, False)
+            self.display_members(self.enemy_data.party.team, False)
 
             # Arena screen
             pygame.draw.rect(self.display, (255, 0, 0), self.arena_screen, 2)
-            self.enemy_data.display_enemy_team(self.display)
+            self.enemy_data.display_field_team(self.display)
 
             # control panel
             pygame.draw.rect(self.display, "Orange", self.control_panel, 2)

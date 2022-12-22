@@ -1,5 +1,25 @@
 # ChangeLog
 
+## 12/22/2022 1.4.0 Back up and running
+
+    A lot of structal changes to the character class mostly renaming stats and rehualed how weapons are used.
+    fixed up items to be usaable again adding new stats
+    moved some files
+    revamped a bunch of stuff I can't remember
+    now all test can bee used.
+
+## 12/10/2022 1.3.1 Enhanced Player Characters
+
+    Characters now have new stats
+        description - Allows a character to have a summery of a character
+        inventory slots - total inventory space a character has
+        arm lots - how many weapons a character can hold
+        pocket slots - how many stand alone items a character can have ready
+        hands - a list of weapons being held by the character
+        pockets - a list of items being held by a character
+
+    Overhauled character save data to now save character stats, connects to slot items, and equipped items
+
 ## 12/5/2022 1.3.0
 
     A lot of changes has happened between the last change log but most if not all have been forgotten.

@@ -2,10 +2,8 @@
 
 ## Combat
 
-Continue to figure out a way to make actions work.
+    Continue to work on The combat actions until they can be operated.
 
-## Save manager
+## Fix up the save system
 
-* Start with a main menu.
-* make a ally viewer.
-* make a item viewer.
+    Currently the saving system in the game is broken due to several overhauls to the character class and item class including new tables and stats.

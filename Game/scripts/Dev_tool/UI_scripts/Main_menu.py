@@ -1,6 +1,7 @@
 # 11/27/2022
 from tkinter import *
 from tkinter import ttk
+from UI_scripts.Character_creator_frame import Character_creation
 
 class MainMenu(Tk):
     def __init__(self):
@@ -38,16 +39,14 @@ class MainMenu(Tk):
         create_notebook.pack(expand=1, fill='both')
 
         # Create Tabs
-        create_ally_tab = Frame(create_notebook)
-        create_enemy_tab = Frame(create_notebook)
+        create_character_tab = Character_creation(create_notebook)
         create_item_tab = Frame(create_notebook)
+        create_map_tab = Frame(create_notebook)
 
-        create_notebook.add(create_ally_tab, text="Allies")
-        create_notebook.add(create_enemy_tab, text="Enemies")
+        create_notebook.add(create_character_tab, text="Characters")
         create_notebook.add(create_item_tab, text="Items")
+        create_notebook.add(create_map_tab, text="Maps")
 
         ############################ Create ############################
         #
-
-        
         

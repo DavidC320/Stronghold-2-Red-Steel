@@ -4,7 +4,7 @@ from pygame import mixer
 
 from Movement import Movement
 from Combat import Combat
-from Teams import Player
+from Game_scripts.Teams import Player
 
 pygame.init()
 
@@ -19,6 +19,13 @@ class Debug_menu:
 
         # Classes
         self.player = Player()
+
+        # teams
+        # player
+        self.player_data = self.player
+        if len(self.player_data.party.team) <= 0:
+            self.player.party.generate_allies()
+
         self.combat = Combat(self.display, self.clock, self.player)
         self.move_test = Movement(self.display,  self.clock, self.player)
 

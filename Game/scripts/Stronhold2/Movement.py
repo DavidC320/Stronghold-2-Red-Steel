@@ -58,9 +58,9 @@ class Movement:
         # spends energy
         if p_run and moving:
             if not self.current_ally.exhausted:
-                self.current_ally.change_energy(-.2)
+                self.current_ally.change_stamina(-.2)
         else:
-            self.current_ally.change_energy(.2)
+            self.current_ally.change_stamina(.2)
 
         # basic movement
         if p_left:
@@ -142,12 +142,14 @@ class Movement:
             # player data
             create_text(self.display, "Leader", (255, 255, 255), (6, 170), "topleft")
             texts = (f"Party: {self.player_data.party.current_member + 1} / {len(self.player_data.party.team)}", f"Name: {self.current_ally.name}",
-            f"Race: {self.current_ally.race}", 
-            f"Hp: {self.current_ally.current_hp} / {self.current_ally.hp}", 
-            f"Eg: {int(self.current_ally.current_energy)} / {self.current_ally.energy}", 
+            f"Race: {self.current_ally.life_form}", 
+            f"Hp: {self.current_ally.current_hp} / {self.current_ally.base_hp}", 
+            f"Eg: {int(self.current_ally.current_stamina)} / {self.current_ally.base_stamina}", 
             f"Tired: {self.current_ally.exhausted}",
             #f"At: {self.current_ally.base_attack} + {self.current_ally.weapon.attack}",
-            f"Fight Lv: {self.current_ally.fighter_lv}", f"Hunt Lv: {self.current_ally.hunter_lv}", f"Cast Lv: {self.current_ally.caster_lv}"
+            f"Fight Lv: {self.current_ally.fighter_lv}", 
+            f"Hunt Lv: {self.current_ally.hunter_lv}", 
+            f"Cast Lv: {self.current_ally.caster_lv}"
             )
             y = 200
             for text in texts:

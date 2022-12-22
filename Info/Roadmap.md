@@ -1,37 +1,22 @@
-# RoadMap version 1.1
+# Stronghold 2 Road map
 
-## 1. Build the Back End
+## The Foundation
 
-    Create the games classes and functions to make the game easy to use.
+Create the framework for how the game works
 
-## 2. Build the Debug Menu
+1. Create the character base
+2. Create the party manager
+3. Create the Item Base
+4. Create the inventory manager
+5. Create the player save data manager
 
-    Create several tests to make sure the game works in it's key components
+## The Systems
 
-* Movement tile based
-* Movement free based
-* Combat
-* Party manager
-* Inventory manager
+1. Create Combat loop
+2. Create Movement
+3. Create Map and area movement
+4. Create party manger
+5. Create inventory manager
+6. Create Over map
 
-## 3. Build Stronghold 2 Beta
-
-    Create a beta build of the game
-
-Combine all of the systems in the debug menu into a functional game.
-
-## 4. Build the mod tool
-
-    Create a easy way for a user to create custom content for the game
-
-* Map creator
-* Enemy creator
-* Item creator
-
-## 5. Build Stronghold Blue Iron
-
-    Create a simple Tkinter game that is just the original concept of Stronghold
-
-## 6. Build Stronghold 2 Red Steel
-
-    Create the final build of Stronghold and update it.
+## The Tool
