@@ -25,7 +25,6 @@ class Enemy(Team_base):
             member.display_character(display)
     
     def combat_initialize_field_team(self, x_m_M, y):
-        print(self.party.team)
         if len(self.party.team) > 0:
             print("more than zero")
             x_min = x_m_M[0]

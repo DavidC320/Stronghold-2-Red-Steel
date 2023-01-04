@@ -17,7 +17,7 @@ class Party_manager:
         self.used_ally_ids = []
     
     @property
-    def current_ally_class(self):
+    def current_ally(self):
         return self.team[self.current_member]
 
     def change_current(self, places = 1):

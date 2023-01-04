@@ -4,6 +4,15 @@ import pygame
 from Game_scripts.Teams import Enemy
 from Game_scripts.Tool_box import create_text
 
+class character_move:
+    def __init__(self, user_team, user_index, action, action_index, target_team, target_index):
+        self.user_team = user_team
+        self.user_index = user_index
+        self.action = action
+        self.action_index = action_index
+        self.target_team = target_team
+        self.target_index = target_index
+
 class Combat:
     def __init__(self, display, clock, player):
         self.display = display
@@ -24,26 +33,114 @@ class Combat:
 
         # options
         self.action_dict = {
-            "Attack" : {
-                "Left Weapon" : False,
-                "Both Weapon" : False, 
-                "Right Weapon" : False},
-            "Defend" : "Select a party member to defend",
-            "Item" : {
-                "Use left pocket" : False, 
-                "Use inventory" : False, 
-                "Use right pocket" : False},
-            "Run" : ("Don't Run Away", "Run AWay")
+            "can use" : True,
+            "operation" : "button",
+            "column and row" : [2, 2],
+            "up and down jump" : [-2, 2],
+            "move" : None,
+            "options" : {
+                "Attack" : {
+                    "can use" : True,
+                    "operation" : "slide",
+                    "column and row" : None,
+                    "up and down jump" : [0, 0],
+                    "move" : "attack",
+                    "options" : {}
+                },
+                "Item" : {
+                    "can use" : True,
+                    "operation" : "button",
+                    "column and row" : [2, 1],
+                    "up and down jump" : [0, 0],
+                    "move" : None,
+                    "options" : {
+                        "Pockets" : {
+                            "can use" : True,
+                            "operation" : "slide",
+                            "column and row" : None,
+                            "up and down jump" : [0, 0],
+                            "move" : "item",
+                            "options" : {
+
+                            }
+                        },
+                        "Inventory" : {
+                            "can use" : True,
+                            "operation" : "slide",
+                            "column and row" : None,
+                            "up and down jump" : [0, 0],
+                            "move" : "item",
+                            "options" : {
+                                
+                            }
+                        }
+                    }
+
+                },
+                "Defend" : {
+                    "can use" : True,
+                    "operation" : "allies",
+                    "column and row" : None,
+                    "up and down jump" : [0, 0],
+                    "move" : "defend",
+                    "options" : {
+
+                    }
+                },
+                "Other Actions" : {
+                    "can use" : True,
+                    "operation" : "button",
+                    "column and row" : [2, 1],
+                    "move" : None,
+                    "options" : {
+                        "Run" : {
+                            "can use" : True,
+                            "operation" : "button",
+                            "column and row" : [2, 1],
+                            "up and down jump" : [0, 0],
+                            "move" : "run",
+                            "options" : {
+                                "Don't run" : {
+                                    "can use" : True,
+                                    "operation" : None,
+                                    "column and row" : None,
+                                    "up and down jump" : [0, 0],
+                                    "move" : "back",
+                                    "options" : {}
+                                },
+                                "Run" : {
+                                    "can use" : True,
+                                    "operation" : None,
+                                    "column and row" : None,
+                                    "up and down jump" : [0, 0],
+                                    "move" : "end",
+                                    "options" : {}
+                                    }
+                                }
+                            },
+                        "End turn" : {
+                            "can use" : True,
+                            "operation" : None,
+                            "column and row" : None,
+                            "up and down jump" : [0, 0],
+                            "move" : "end turn",
+                            "options" : {}
+                        }
+                    }
+                }
+            }
         }
 
-        self.basic_actions = list(self.action_dict.keys())
-        # actions
-        self.attack_actions = list(self.action_dict.get("Attack").keys())  # problem
-        self.use_item_actions = list(self.action_dict.get("Item").keys())  # problem
-        self.run_away_actions = self.action_dict.get("Run")  # problem
-        # current settings
-        self.mode = None
+        
+        self.move_list = []
+        self.player_action_path = []  # this is the path to the current option in the action menu
         self.selected = 0
+        self.current_move = {
+            "action" : None,
+            "action_index" : 0,
+            "target team" : None,
+            "target index" : 0
+        }
 
         # ui elements
         self.map = pygame.Rect(0, 0, self.screen_size[0], 160)  # map bar
@@ -51,11 +148,169 @@ class Combat:
         self.arena_screen = pygame.Rect(150, 160, self.screen_size[0] - 300, 300)  # arena screen
         self.control_panel = pygame.Rect(150, 460, self.screen_size[0] - 300, 300)  # control panel
         self.enemy_team = pygame.Rect(self.screen_size[0] - 150, 160, 150, self.screen_size[1] - 160)  # Enemy party
+        self.current_display_buttons = []
 
-        # sut up enemies
+        # set up enemies
         self.area_limit = (self.arena_screen.x, self.arena_screen.x + self.arena_screen.width)
 
+    @property
+    def current_option(self):
+        # gets the current nested dictionary using the action path
+        current_option = self.action_dict
+        if self.player_action_path:
+            for path in self.player_action_path:
+                current_option = current_option.get("options").get(path)###################################################################
+                
+    def change_selected(self, number):
+        # increases or decreases the selected variable
+        option_length = len(self.current_option.get("options"))
+        self.selected += number
+        if self.selected > option_length - 1:
+            self.selected -= option_length
+        elif self.selected < 0:
+            self.selected += option_length
+    
+    def change_path(self, mode):
+        # changes the action path
+        options = self.current_option.get("options")
+        option_keys = options.keys()
+        if mode == "back":
+            self.remove_last_path()
+
+        elif mode == "forward":
+            next_path = option_keys[self.selected]
+            option_info = options.get(next_path)
+            if option_info.get("can use"):
+                #   checks if the last option was an action
+                if self.current_move.get("action") != None:
+                    self.current_move["action index"] = self.selected
+                self.move_enter(option_info, next_path)
+
+    def move_enter(self, selected_option, next_path):
+        action =  selected_option.get("move")
+        if action == "back":
+            self.remove_last_path()
+        elif action == "end":
+            None
+        elif action == "end turn":
+            self.player_data.party.current_member += 1
+            if len(self.player_data.party.team) == self.player_data.party.current_member:
+                self.player_data.party.current_member = 0
+                self.mode = "enemy"
+            self.player_action_path = []
+        else:
+            self.current_move["action"] = action
+            self.player_action_path.append(next_path)
+
+    def build_move(self):
+        None
+
+    def remove_last_path(self):
+        if len(self.player_action_path) > 0:
+                self.player_action_path.pop(-1)
+
+    def controller(self, event):
+        # this is the new controls for the game
+        if self.state == "player":
+            up_down_change = self.current_option.get("up and down jump")
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    self.change_selected(-1)
+                elif event.key == pygame.K_RIGHT:
+                    self.change_selected(1)
+                elif event.key == pygame.K_UP:
+                    self.change_selected(up_down_change[0])
+                elif event.key == pygame.K_UP:
+                    self.change_selected(up_down_change[1])
+
+                elif event.key == pygame.K_RETURN:  # enter
+                    self.change_path("forward")
+                elif event.key == pygame.K_BACKSPACE:
+                    self.change_path("back")
+
+    ####################################################################################################################################################
+    #################################################################### showing UI ####################################################################
+    ####################################################################################################################################################
+
+    def display_members(self, team, show_playable = True):
+        # Display the members
+        num = 0
+        for member in team:
+            member.display_combat_icon(self.display, num, show_playable)
+
+    def build_action_buttons(self):
+        # Creates the action buttons to show on screen
+        current_option = self.current_option
+        options = current_option.get("options") # gets the dictonary of options
+        row_column = current_option.get("column and row")
+        if row_column == None:
+            row_column = [1, 4]
+
+        # gets teh initial position of the buttons
+        control_panel_pos = self.control_panel.topleft
+        x = control_panel_pos[0]
+        y = control_panel_pos[1]
+        # gets the size of the buttons
+        control_panel_size = self.control_panel.size
+        button_size = (control_panel_size[0]/ row_column[1], control_panel_size[1]/ row_column[0])
+
+        # goes through all of the options inside of the current selected option and creates buttons form them
+        buttons = []
+        for option in options:
+            # creates the position
+            if x > control_panel_pos[0] + button_size[0] * row_column[1] -1:
+                x = control_panel_pos[0]
+                y += button_size[1]
+
+            button = pygame.Rect(x, y, button_size[0], button_size[1])
+            text = option
+            can_use = options.get(option).get("can use")
+            buttons.append((button, text, can_use))
+        
+        # end product
+        self.current_display_buttons= buttons
+
+    def draw_buttons(self): 
+        # draws the buttons
+        # dictionaries for color
+        can_select_selected_colors = {
+            True : "Green",
+            False : "Red"
+        }
+        can_select_unselected_colors = {
+            True : "Yellow",
+            False : "Grey"
+        }
+        for button in self.current_display_buttons:
+            index_number = self.current_display_buttons.index(button)
+            color = "white"  # false safe
+            if index_number == self.selected:
+                color = can_select_selected_colors.get(button[2])
+            else:
+                color =  can_select_unselected_colors.get(button[2])
+
+            pygame.draw.rect(self.display, color, button[0], 5)
+            create_text(self.display, button[1], "White", button.center)
+
+    ####################################################################################################################################################
+    #################################################################### showing UI ####################################################################
+    ####################################################################################################################################################
+
+    ##################################################################################################################################################
+    #####################################################################  Setup #####################################################################
+    ##################################################################################################################################################
+
+    def setup_combat(self):
+        # sets up the the enemy and player ui for the game
+        # team icons
+        self.setup_combat_icons(self.player_data.party.team, self.player_team)
+        self.setup_combat_icons(self.enemy_data.party.team, self.enemy_team)
+
+        # sets the enemies on the field
+        self.enemy_data.combat_initialize_field_team(self.area_limit, self.arena_screen.midbottom[1] - 10)
+
     def setup_combat_icons(self, team, display_rect):
+        # creates the combat icons in the game
         party_4 = len(team) <= 4
         pos = display_rect.topleft
         x = pos[0]
@@ -72,131 +327,30 @@ class Combat:
                 member.combat_icon_pos = (x, y)
                 member.build_combat_icon(party_4)
 
-    def display_members(self, team, show_playable = True):
-        # Display the members
-        num = 0
-        for member in team:
-            member.display_combat_icon(self.display, num, show_playable)
+    
 
-    def draw_action_buttons(self):
-        if self.mode ==  None:
-            self.draw_button(self.basic_actions, 2, 2)
+    def setup_player_actions(self):
+        None
+        # creating weapon actions
+        weapon_actions ={}
+        current_member = self.player_data.current_member
+        for weapon in current_member.hands:
+            if "equip_weapon" in weapon.flags:
+                None
+                weapon_action = {weapon.name : {
+                    "can use" : current_member.stamina > weapon.energy_spend
+                }}
 
-        elif self.mode == "Attack":
-            self.draw_button(self.action_dict.get("Attack"), column=3)
+        # creating pocket actions
 
-        elif self.mode == "Defend":
-            create_text(self.display, "Select a party member to defend", "white", self.control_panel.center)
-
-        elif self.mode == "Run":
-            self.draw_button(self.action_dict.get("Run"), column= 2)
-
-        elif self.mode == "Item":
-            self.draw_button(self.action_dict.get("Item"), column= 3)
-
-
-    def draw_button(self, options, row = 1, column = 1):
-        # This draws the buttons for the game
-        # Set up
-        control_panel_size = self.control_panel.size
-        control_panel_pos = self.control_panel.topleft
-        x = control_panel_pos[0]
-        y = control_panel_pos[1]
-        if isinstance(options, dict):
-            dict_ = options
-            options = list(options.keys())
-            is_dict = True
-        else:
-            is_dict =  False
-        num = 0
-        button_size = (control_panel_size[0]/ column, control_panel_size[1]/ row)
-        for option in options:
-            if x > control_panel_pos[0] + button_size[0] * column -1:
-                x = control_panel_pos[0]
-                y += button_size[1]
-            button = pygame.Rect(x, y, button_size[0], button_size[1])
-            if num == self.selected:
-                if is_dict and dict_.get(option) == False:
-                    color = "Red"
-                else:
-                    color = "Green"
-            
-            else:
-                if is_dict and dict_.get(option) == False:
-                    color = "Grey"
-                else:
-                    color = "Yellow"
-            pygame.draw.rect(self.display, color, button, 5)
-            create_text(self.display, option, "White", button.center)
-            x += button_size[0]
-            num += 1
-                
-    def change_selected(self, number, options):
-        option_length = len(options)
-        self.selected += number
-        if self.selected > option_length - 1:
-            self.selected -= option_length
-        elif self.selected < 0:
-            self.selected += option_length
-
-    def event_controller(self, event):
-        # What are the controls for the player using events
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                if self.mode == None: # selecting action
-                    self.change_selected(-1, self.basic_actions)
-
-                elif self.mode == "Attack": # attack action
-                    self.change_selected(-1, self.attack_actions)
-
-                elif self.mode == "Run": # running action
-                    self.change_selected(-1, self.run_away_actions)
-
-                elif self.mode == "Item": # item action
-                    self.change_selected(-1, self.use_item_actions)
-            
-            elif event.key == pygame.K_RIGHT:
-                if self.mode == None: # selecting action
-                    self.change_selected(1, self.basic_actions)
-
-                elif self.mode == "Attack": # attack action
-                    self.change_selected(1, self.attack_actions)
-
-                elif self.mode == "Run": # running action
-                    self.change_selected(1, self.run_away_actions)
-
-                elif self.mode == "Item": # item action
-                    self.change_selected(1, self.use_item_actions)
-
-            elif event.key == pygame.K_UP:
-                if self.mode == None: # selecting action
-                    self.change_selected(-2, self.basic_actions)
-
-            elif event.key == pygame.K_DOWN:
-                if self.mode == None: # selecting action
-                    self.change_selected(2, self.basic_actions)
-
-            elif event.key == pygame.K_RETURN:  # enter
-                if self.mode == None:
-                    self.mode = self.basic_actions[self.selected]  # changes the mode with the selected action
-                    self.selected = 0 # reverts to 
-
-            elif event.key == pygame.K_BACKSPACE:
-                # Goes back
-                if self.mode in self.basic_actions:  # Only avtive when the mode is in basic actions
-                    self.selected =  self.basic_actions.index(self.mode)  # sets the selected number to the last number
-                    self.mode = None
-
-                # Only active when in specific actions
-                elif self.mode in (self.attack_actions):
-                    None
+        # creating inventory actions
+    ##################################################################################################################################################
+    #####################################################################  Setup #####################################################################
+    ##################################################################################################################################################
 
     def run_combat(self):
         running = True
-        # setup icons
-        self.setup_combat_icons(self.player_data.party.team, self.player_team)
-        self.setup_combat_icons(self.enemy_data.party.team, self.enemy_team)
-        self.enemy_data.combat_initialize_field_team(self.area_limit, self.arena_screen.midbottom[1] - 10)
+        self.setup_combat()
         
         while running:
             self.clock.tick(60)  # This sets up framerate
@@ -230,6 +384,5 @@ class Combat:
             # control panel
             pygame.draw.rect(self.display, "Orange", self.control_panel, 2)
             self.draw_action_buttons()
-
 
             pygame.display.update()

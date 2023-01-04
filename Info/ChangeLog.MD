@@ -1,9 +1,15 @@
 # ChangeLog
 
+## 1/4/2022 1.4.1 No progress
+
+    Create the spin_test file to test how to display information that can't fit within the action ui box.
+    items now how the energy_spend variable to change how much stamina is used when using an item.
+    Combat has had a massive overhaul changing how actions are shown. Currently in development.
+
 ## 12/22/2022 1.4.0 Back up and running
 
-    A lot of structal changes to the character class mostly renaming stats and rehualed how weapons are used.
-    fixed up items to be usaable again adding new stats
+    A lot of structural changes to the character class mostly renaming stats and rehualed how weapons are used.
+    fixed up items to be usable again adding new stats
     moved some files
     revamped a bunch of stuff I can't remember
     now all test can bee used.

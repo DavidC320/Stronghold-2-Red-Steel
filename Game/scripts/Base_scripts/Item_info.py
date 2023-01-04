@@ -26,7 +26,7 @@ def item_converter(self, i):
 class Item_base:
     def __init__(self,
         id, name, desc, category, sub, flags, properties, location, skills_used,
-        max_quantity, quant, inventory_slots= None, pocket_slots= None, attack = None, defense = None, health = None, stamina = None, speed = None):
+        max_quantity, quant, inventory_slots= None, pocket_slots= None, attack = None, defense = None, health = None, stamina = None, speed = None, energy_spend= 2):
 
         # Information
         self.id = id
@@ -49,6 +49,7 @@ class Item_base:
         self.health = health
         self.stamina = stamina
         self.speed = speed
+        self.energy_spend = energy_spend
         self.setup_item
 
     #########
@@ -182,17 +183,17 @@ class Item_base:
 class Medical_item(Item_base):
     def __init__(
         self, id, name, desc, sub, flags, properties, location, skills_used, 
-        max_quantity, quant, health=None):
+        max_quantity, quant, health=None, energy_spend= 1):
         super().__init__(id, name, desc, "medical", sub, flags, properties, location, skills_used, 
-        max_quantity, quant, health)
+        max_quantity, quant, health, energy_spend)
 
 class Equipment_item(Item_base):
     def __init__(
         self, id, name, desc, sub, flags, properties, location, skills_used, 
-        max_quantity, quant, inventory_slots=None, pocket_slots=None, attack=None, defense=None, health=None, stamina=None, speed=None):
+        max_quantity, quant, inventory_slots=None, pocket_slots=None, attack=None, defense=None, health=None, stamina=None, speed=None, energy_spend= 2):
         super().__init__(
             id, name, desc, "equipment", sub, flags, properties, location, 
-            skills_used, max_quantity, quant, inventory_slots, pocket_slots, attack, defense, health, stamina, speed)
+            skills_used, max_quantity, quant, inventory_slots, pocket_slots, attack, defense, health, stamina, speed, energy_spend)
 
 ##########################################################################################################################################################################################
 ###################################################################################### Item Classes ######################################################################################

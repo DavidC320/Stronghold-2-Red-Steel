@@ -1,7 +1,7 @@
 # Stronghold 2 Red Steel
 
     Start date 9/19/2022
-    Version 1.4.0 Back up and running
+    Version 1.4.1 Restart
 
 ## Current Status: Resumed
 
