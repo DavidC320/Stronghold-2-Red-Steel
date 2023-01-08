@@ -1,5 +1,5 @@
 # This is to test if I can creaet dynamic dictonaries in python.
-class player:
+"""class player:
     def __init__(self, name, _list) -> None:
         pass
         self.name = name
@@ -46,7 +46,16 @@ class Action_test_1:
             else:
                 print("!")
 a = Action_test_1()
-a.run_test()
+a.run_test()"""
+
+a = {
+    "a" : {
+        "aa" : 3,
+        "bb" : 4
+    },
+    "b" : 2
+}
+print(a["a"]["aa"])
 
 # Notes
 # dictonaries connot be dynamicly changed due to everything in the dictonarry being set and cannot be changed without updating it.

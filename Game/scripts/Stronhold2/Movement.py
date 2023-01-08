@@ -16,7 +16,7 @@ class Movement:
             self.player_data.party.generate_allies(16)
 
         # what character is currently selceted
-        self.current_ally = self.player_data.party.current_ally_class
+        self.current_ally = self.player_data.party.current_ally
 
         # code from Coders Legacy // how to create rectangels
         # these lines are for the player character
@@ -116,7 +116,7 @@ class Movement:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         self.player_data.party.change_current()
-                        self.current_ally = self.player_data.party.current_ally_class
+                        self.current_ally = self.player_data.party.current_ally
 
 
             self.controller()

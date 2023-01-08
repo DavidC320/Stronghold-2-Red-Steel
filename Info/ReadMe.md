@@ -1,14 +1,19 @@
 # Stronghold 2 Red Steel
 
     Start date 9/19/2022
-    Version 1.4.1 Restart
+    Version 1.5.0 Combat and Moves
 
 ## Current Status: Resumed
 
-    working on the dev tool early to have a modding tools ready
-    working on the combat menu
-    working on finalizing the character class and item classes
+    Working on Combat moves and turns.
 
 ## General information
 
     Stronghold is a turn based RPG with heavy emphases on equipment and items along with unique characters.
+
+## Inspirations
+
+    Cataclysm Dark Days Ahead [****-]
+    The Denpa Men Trilogy [*****]
+    Pokemon [*----]
+    The Binding of Issac [*----]

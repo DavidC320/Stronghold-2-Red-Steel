@@ -3,8 +3,9 @@ import pygame
 from pygame import mixer
 
 from Movement import Movement
-from Combat import Combat
+from Combat_2 import Combat
 from Game_scripts.Teams import Player
+from Game_scripts.Tool_box import create_text
 
 pygame.init()
 
@@ -32,16 +33,6 @@ class Debug_menu:
         # options information
         self.options = ("Movement", "Combat", "Inventory", "Item storage", "Ally storage")
         self.current = 0
-        
-        self.font = pygame.font.SysFont("Britannic", 22)
-
-    def create_text(self, text, color, position, mode = "center"):
-        text = self.font.render(text, False, color)
-        if mode == "center":
-            text_rect = text.get_rect(center=position)
-        elif mode == "midleft":
-            text_rect = text.get_rect(midleft=position)
-        self.display.blit(text, text_rect)
 
     def change_current(self, increment= True):
         length = len(self.options) - 1
@@ -63,7 +54,7 @@ class Debug_menu:
                 color = "Yellow"
             else:
                 color = "White"
-            self.create_text(option, color, (x, y), "midleft")
+            create_text(self.display, option, color, (x, y), "midleft")
             y += 30
 
     def run_debug(self):
@@ -88,14 +79,14 @@ class Debug_menu:
 
             # display settings
             self.display.fill((0, 20, 0))  # play screen
-            self.create_text("Strong Hold 2 Debug Menu", "Yellow", (self.display_size[0] / 2, 20))
+            create_text(self.display, "Strong Hold 2 Debug Menu", "Yellow", (self.display_size[0] / 2, 20))
 
             if testing:
                 operation = self.options[self.current]
                 if operation == "Movement":
                     testing = self.move_test.run_movement()
                 elif operation == "Combat":
-                    testing = self.combat.run_combat()
+                    testing = self.combat.play_combat()
                 else:
                     testing = False
 

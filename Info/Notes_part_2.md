@@ -1,8 +1,40 @@
 # Notes
 
+## 1/5/2023
+
+    I'm making better progress in the new combat loop and now I'm making the menu for it.
+    Attack
+    Items
+    Actions
+    End turn
+
+---
+    I just realized that the new way I'm making the combat menu means that I can't just use a string path but I would have to make a list of indexes.
+
 ## 1/4/2023
 
     I need to restart the combat test and make a better version
+
+---
+    I going to need to make a better action chunk so here is the idea
+    {
+        "title" : "Make an Action.",
+        "settings":{
+            "can use" : True,
+            "action" : None,
+            "button style": { 
+                "button display": "grid",
+                "column/row" : (2, 2),
+                "show buttons" : True,
+            },
+        }
+        "buttons": (
+            {},
+            {},
+            {},
+            {},
+        )
+    }
 
 ## 1/2/23
 
