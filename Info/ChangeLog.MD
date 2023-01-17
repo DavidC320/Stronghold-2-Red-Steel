@@ -1,5 +1,15 @@
 # ChangeLog
 
+## 1/17/2023 1.5.1 Overhaul
+
+    Transformed spin_test to combat 2.
+    Got the menu working
+        Can go into sub options inside of buttons
+        Can now build options using a class instead of a dictionary to save on space
+    Create player moves
+        Created the player_move object to store move info
+        The player can make attacks
+
 ## 1/4/2022 1.4.1 No progress
 
     Create the spin_test file to test how to display information that can't fit within the action ui box.

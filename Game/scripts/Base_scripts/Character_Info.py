@@ -255,10 +255,8 @@ class Base_Character:
     @property
     def can_use_weapon(self):
         # sees if this character can use weapons
-        for item in self.hands:
-            for flag in item.flags:
-                if flag == "equip_weapon":
-                    return True
+        if len(self.grab_weapons_in_hands) != 0:
+            return True
         return False
 
     @property
@@ -272,6 +270,13 @@ class Base_Character:
     ################################################################################################################################################
     #################################################################### Checks ####################################################################
     ################################################################################################################################################
+    @property
+    def grab_weapons_in_hands(self):
+        weapons = []
+        for item in self.hands:
+            if "equip_weapon" in item.flags:
+                weapons.append(item)
+        return weapons
 
     def grab_weapon_info(self, weapon):
         skills_used = weapon.skills
@@ -309,14 +314,13 @@ class Base_Character:
         damage = 0
         proficiency = [0, 0]
         number_of_used = 0
-        weapons = self.hands
+        weapons = self.grab_weapons_in_hands
         for selected_weapon in weapon_index:
             weapon = weapons[selected_weapon]
-            if "equip_weapon" in weapon.flags:
-                used_weapons = self.grab_weapon_info(weapon)
-                damage += used_weapons[0]
-                proficiency = used_weapons[1]
-                number_of_used += 1
+            used_weapons = self.grab_weapon_info(weapon)
+            damage += used_weapons[0]
+            proficiency = used_weapons[1]
+            number_of_used += 1
 
         if number_of_used != 0:
             # correcting the proficiencies
@@ -364,11 +368,3 @@ class Base_Character:
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################
 #############################################################################################################################################################################
-
-a = Base_Character(None, None, None, None, None, None, 0, 0, 10, 20, 4, 5, 4, 4, 5, 2, 0, 4, 0, 0, 0, 0, 0)
-for item in a.hands:
-    print(item.name, item.attack, item.skills)
-print(a.hands)
-print(a.attack_roll([0, 1]))
-print(a.attack_roll([0]))
-print(a.attack_roll([1]))

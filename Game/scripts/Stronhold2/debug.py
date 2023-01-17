@@ -66,7 +66,6 @@ class Debug_menu:
             # events that control the game
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    print("Debug is now closed")
                     running = False
                 
                 if event.type == pygame.KEYDOWN:
@@ -93,5 +92,5 @@ class Debug_menu:
             self.draw_options()
 
             pygame.display.update()
-
-        pygame.quit()
+        else:
+            pygame.quit()

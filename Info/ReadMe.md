@@ -1,7 +1,7 @@
 # Stronghold 2 Red Steel
 
     Start date 9/19/2022
-    Version 1.5.0 Combat and Moves
+    Version 1.5.1 Combat and Moves
 
 ## Current Status: Resumed
 

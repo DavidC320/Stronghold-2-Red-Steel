@@ -1,5 +1,23 @@
 # Notes
 
+## 1/16/2023
+
+    Back after a 4 day break doing modeling.
+
+---
+    Goals
+    Remake the menu
+    Make a end turn function for the move creator
+
+## 1/12/2023
+
+    Currently got the create move function done so I just need to clean out the code.
+    First I need to redo how the menu works. I will change it to a object instead of a dictionary to make cleaner code and quick changes.
+
+## 1/8/2023
+
+    I got into an issue. I need to make an action thing
+
 ## 1/5/2023
 
     I'm making better progress in the new combat loop and now I'm making the menu for it.
