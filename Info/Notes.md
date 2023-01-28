@@ -1,5 +1,109 @@
 # Notes
 
+## 1/28/2023
+
+    After yesterday I've given myself a break again but whatever. Now is time to interpret what I need to do before Monday. First feedback.
+
+---
+    FeedBack
+    I had 5 people play the game with 3 people who gave feedback
+    Mostly add Music and sfx which is fine
+    but I got a balance feed back that defending should be more expensive like costing 4 stamina 
+    One of them was giving me ideas that are beyond the scope of combat so I can't retain that information nor do anything with it till a long time.
+
+---
+    general
+    I want to add items into the game properly. So far I have only equipment items that are already equipped. The problem is that items are built for equipment and that's about it but I need medical items usable which can't use many of the stats that the item base class has. So I'll need to rely on the status effect system that is half broken.
+
+## 1/27/2023
+
+    Add background music
+    sfx 
+
+## 1/26/2023
+
+    Yesterday was an absolute fluke but I need to work on this game test.
+
+---
+    Bugs
+    Sometimes when going through effects the game will say that the object that is in the effects list is not a status effect. I need to figure out what is causing this problem and fix it.
+    I think it's caused by the list being empty and its grabbing a None object.
+    Problem was probably fixed. It was potently caused when curing buffs so I took that out.
+
+    When a character that was once in the available team dies, they are still playable.
+    What ever is in charge of getting the current player character and  what shows as selected need to be fixed.
+    I don't know if I fixed it until I can recreate the bug
+
+---
+    I've added better text to the game now it has more structured sentences
+
+    I now need to add the ability for the menu buttons to have extra text.
+    To do this need to change how the menu data is displayed.
+    I'll add a new variable that can contain a list of extra text to display
+    But doing this will cause overlapping problems so I need to pre-create the text locations.
+    The title of the button will move to the top and the extras will fill up the empty space
+    To get the extra locations I just need to take the bottom y coordinate of the title position and the bottom coordinate of the button itself.
+
+    Now I need to see if it works with characters
+
+## 1/25/2023
+
+    Combat now somewhat functional where each team can now kill each other but I need to make it look better and I got to get somethings working
+
+---
+    Improvements
+    Have more data in the action menu to show.
+        weapons will say what skill is used and damage threshold
+        Characters will have their show their health and defense
+
+    Better move display
+        More legible move interpreting I.E. "{user} attacks {target} with {weapon} dealing {damage}"
+
+    Add a score board for fun
+    show team wins and kills
+
+    Implement
+    Add Items to the game to allow characters to heal, revive, boost, or equip items which will open the inventory and pockets to the player
+
+## 1/23/2023
+
+    I'm running out of time and I need to get a lot of things done
+
+    1. get move interpreter working
+    2. get the moves of a character to take stamina from them
+    3. get the result function working
+    4. get a win and lose function
+
+## 1/19/2023
+
+    In the auto move function I realized that I need a way to increment who is currently selected which makes all of the auto characters moves be made by the last index for making moves.
+
+    Also realized that when player character dies that character will still be in the playable characters area which 
+
+## 1/18/2023
+
+    Today I need to create the auto move system for the enemies so that they can make moves.
+    Legend: // ignore, V work
+    move categories
+        Attack V
+        Defend V
+        Item //
+            Pocket //
+            Iventory //
+        End turn V
+    
+    So I just need to get Attack, Defend, and End Turn for this game to be functional
+    Since I have a way to make moves I should base it off of that.
+    move consist of
+
+    user_team <- static
+    User_index <- static
+    <These need to be randomized>
+    action
+    action_index
+    target_team
+    target_index
+
 ## 1/16/2023
 
     Back after a 4 day break doing modeling.

@@ -1,5 +1,36 @@
 # ChangeLog
 
+## 1/28/2023 2.0.0 Combat Alpha
+
+    The game now preoperly stops
+    Characters
+        Now has status effect support
+        Now has can_use for all of the actions such as weapon, defend, and pockets
+    The inventory now has a check for it.
+    Combat
+        Character moves now have speed
+        Menu action now has extra data
+        Implemented the move manager
+        Overhauled how info is built in buttons to allow extra info
+        Redid all of the build_combat_icons funtion since characters icons build themselves out side of the combat object.
+        Created the move state and result state and enemy state
+    Party
+        The max playable is now a int var
+        team members now regain stamina
+        get alive and get playable are now funtions
+            living - gets a index list of all living members
+            playable - gets the indexes of playable members from the living list using the max      playable
+    characters will now show if they died for clearly
+    Created the quick_display_text by dissmanteling the create text funtion in the tool box
+    The tool box can now use timers.
+
+
+## 1/17/2023
+
+    Created the build team menu action function to create quick menu actions for items and abilities
+    Added a configure option one_move
+    exit type "turn" now end the current character's move
+
 ## 1/17/2023 1.5.1 Overhaul
 
     Transformed spin_test to combat 2.

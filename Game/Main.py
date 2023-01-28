@@ -12,3 +12,4 @@ debug_menu = debug.Debug_menu()
 
 while True:
     debug_menu.run_debug()
+    break

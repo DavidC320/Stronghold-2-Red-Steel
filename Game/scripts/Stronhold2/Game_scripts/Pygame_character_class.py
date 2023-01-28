@@ -28,13 +28,13 @@ class Stronghold_character(Base_Character):
 
         # Character combat icon
         self.combat_icon_pos = (0, 0)
+        self.config = None
 
         # setup
         self.build_combat_icon(True)
         
     def display_character(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
-        # text_pos = (self.rect.midbottom[0], self.rect.midbottom[1] + 5)
 
     def build_combat_icon(self, party_of_four):
         # Creates the combat icons.
@@ -49,6 +49,7 @@ class Stronghold_character(Base_Character):
                 "size" : 75},
         }
         config = icon_configuration.get(party_of_four)
+        self.config = config
         x = self.combat_icon_pos[0]
         y = self.combat_icon_pos[1]
 
@@ -56,9 +57,17 @@ class Stronghold_character(Base_Character):
         self.combat_icon_rect = pygame.Rect(x, y, config.get("size"), config.get("size"))
         
         # text
-        self.name_text_rect = self.create_icon_text(.3, self.name, config.get("name"))
-        self.health_text_rect = self.create_icon_text(.8, f"Hp: {self.current_hp} / {self.base_hp}", config.get("health"))
-    
+        self.build_icon_text()
+
+    def build_icon_text(self):
+        if self.config != None:
+            print("hi")
+            self.name_text_rect = self.create_icon_text(.3, self.name, self.config.get("name"))
+            self.health_text_rect = self.create_icon_text(.7, f"Hp: {self.current_hp} / {self.base_hp}", self.config.get("health"))
+            self.stamina_text_rect = self.create_icon_text(.9, f"St: {self.current_stamina} / {self.base_stamina}", self.config.get("health"))
+        else:
+            print("nah")
+
     def create_icon_text(self, y_offset, text, size):
         # This creates the text for the icon
         # getting the font size
@@ -74,13 +83,19 @@ class Stronghold_character(Base_Character):
         i_rect = i_text.get_rect(center=name_pos)
         return i_text, i_rect
 
-    def display_combat_icon(self, display, party_placement= 0, show_playable= True):
+    def display_combat_icon(self, display, is_playable= True, is_selected= False, show_selected= False):
         # draws the characters combat icon.
         # icon
-        if party_placement <= 4:
+        if is_selected and show_selected:
+            pygame.draw.rect(display, "Dark blue", self.combat_icon_rect)
+
+        if is_playable:
             pygame.draw.rect(display, "Cyan", self.combat_icon_rect, 6)
         pygame.draw.rect(display, self.color, self.combat_icon_rect, 4)
 
+        if self.dead:
+            pygame.draw.rect(display, "Grey", self.combat_icon_rect)
+
         # text
-        for text_rect in (self.name_text_rect, self.health_text_rect):
+        for text_rect in (self.name_text_rect, self.health_text_rect, self.stamina_text_rect):
             display.blit(text_rect[0], text_rect[1])

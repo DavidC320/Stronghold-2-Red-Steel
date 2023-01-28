@@ -82,7 +82,7 @@ class Base_Character:
         # Conditions
         self.dead = False
         self.exhausted = False
-        self.status_effects = []
+        self.status_effects = Status_manager()
 
         # Verifies the character
         self.check_character()
@@ -103,7 +103,7 @@ class Base_Character:
             self.hands = []
             
         if not isinstance(self.pockets, list):
-            self.hands = []
+            self.pockets = []
 
         unused_slots = self.arm_slots + len(self.hands)
         # Adds default items into unused slots in the character
@@ -118,7 +118,6 @@ class Base_Character:
             self.dead = True
         else:
             self.dead = False
-        return self.dead
 
     ###############################################################################################################################################
     #################################################################### Setup ####################################################################
@@ -256,16 +255,36 @@ class Base_Character:
     def can_use_weapon(self):
         # sees if this character can use weapons
         if len(self.grab_weapons_in_hands) != 0:
-            return True
+            stamina_use = self.grab_weapons_in_hands[0].energy_spend
+            for weapon in self.grab_weapons_in_hands:
+                if stamina_use > weapon.energy_spend:
+                    stamina_use = weapon.energy_spend
+            return self.current_stamina >= stamina_use
         return False
 
     @property
     def can_use_pocket(self):
         # sees if there are items in the characters pockets
-        if len(self.pockets) > 0:
+        if len(self.pockets) != 0:
             return True
-        else:
-            return False
+        return False
+
+    @property
+    def can_use_defend(self):
+        if self.current_stamina >= 1:
+            return True
+        return False
+
+    @property
+    def available_actions(self):
+        action_list = ["end turn"]
+        if self.can_use_weapon:
+            action_list.append("attack")
+        if self.can_use_pocket:
+            action_list.append("pocket")
+        if self.can_use_defend:
+            action_list.append("defend")
+        return action_list
 
     ################################################################################################################################################
     #################################################################### Checks ####################################################################
@@ -349,7 +368,8 @@ class Base_Character:
         # This also returns remaining damage.
         over_damage = 0
         self.current_hp -= number
-        if self.check_if_dead():
+        self.check_if_dead
+        if self.dead:
             over_damage = self.current_hp * -1
             self.current_hp = 0
         return over_damage
@@ -368,3 +388,61 @@ class Base_Character:
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################
 #############################################################################################################################################################################
+
+
+class Status_manager:
+    def __init__(self):
+        self.status_effects = []
+
+    def chance_add_effect(self, int_chance, effect):
+        chance = randint(0, 100)
+        print(chance, chance >= int_chance)
+        if chance >= int_chance:
+            self.cure_effect(effect.name)
+            self.status_effects.append(effect)
+
+    def cure_effect(self, effect_name):
+        for effect in self.status_effects:
+            if effect.name == effect_name:
+                index =  self.status_effects.index(effect)
+                self.status_effects.pop(index)
+
+    def grab_effect_name(self, effect_name):
+        for effect in self.status_effects:
+            print(effect)
+            if effect.name == effect_name:
+                return effect
+        else:
+            return None
+
+    def grab_effect_type(self, effect_type):
+        effects = []
+        for effect in self.status_effects:
+            if effect.effect_type == effect_type:
+                effects.append(effect)
+
+    def loop_effects(self):
+        for effect in self.status_effects:
+            effect.length -= 1
+            if effect.length < 0 and not effect.immortal:
+                index =  self.status_effects.index(effect)
+                self.status_effects.pop(index)
+
+
+class Status_effect:
+    "A object that contains status data"
+    def __init__(self, name, effect_type, effect_operation, number, length, immortal= False):
+        self.name = name
+        self.effect_type = effect_type
+        self.effect_operation = effect_operation
+        self.number = number
+        self.immortal = immortal
+        self.length = length
+
+"""
+effect types
+    redirect - changes the target to a different target
+    resistance - changes how much damage is received
+
+
+"""

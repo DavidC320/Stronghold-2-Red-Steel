@@ -1,7 +1,7 @@
 # 9/192022
 import pygame
 
-from Game_scripts.Tool_box import create_text
+from Game_scripts.Tool_box import quick_display_text
 
 class Movement:
     def __init__(self, display, clock, player):
@@ -132,15 +132,15 @@ class Movement:
             self.display.blit(text, text_rect)
 
             # controls
-            create_text(self.display, "Controls", (255, 255, 255), (self.screen_size[0] - 120, 170), "topleft")
+            quick_display_text(self.display, "Controls", (255, 255, 255), (self.screen_size[0] - 120, 170), "topleft")
             texts = ("w & ^ = up", "a & < = left", "s & v = down", "d & > = right", "shift = run", "f = switch")
             y = 200
             for text in texts:
-                create_text(self.display, text, (255, 255, 255), (self.screen_size[0] - 144, y), "topleft")
+                quick_display_text(self.display, text, (255, 255, 255), (self.screen_size[0] - 144, y), "topleft")
                 y += 30
 
             # player data
-            create_text(self.display, "Leader", (255, 255, 255), (6, 170), "topleft")
+            quick_display_text(self.display, "Leader", (255, 255, 255), (6, 170), "topleft")
             texts = (f"Party: {self.player_data.party.current_member + 1} / {len(self.player_data.party.team)}", f"Name: {self.current_ally.name}",
             f"Race: {self.current_ally.life_form}", 
             f"Hp: {self.current_ally.current_hp} / {self.current_ally.base_hp}", 
@@ -153,7 +153,7 @@ class Movement:
             )
             y = 200
             for text in texts:
-                create_text(self.display, text, (255, 255, 255), (6, y), "topleft")
+                quick_display_text(self.display, text, (255, 255, 255), (6, y), "topleft")
                 y += 30
 
             pygame.display.update()

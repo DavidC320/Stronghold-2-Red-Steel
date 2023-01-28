@@ -5,7 +5,7 @@ from pygame import mixer
 from Movement import Movement
 from Combat_2 import Combat
 from Game_scripts.Teams import Player
-from Game_scripts.Tool_box import create_text
+from Game_scripts.Tool_box import quick_display_text
 
 pygame.init()
 
@@ -54,7 +54,7 @@ class Debug_menu:
                 color = "Yellow"
             else:
                 color = "White"
-            create_text(self.display, option, color, (x, y), "midleft")
+            quick_display_text(self.display, option, color, (x, y), "midleft")
             y += 30
 
     def run_debug(self):
@@ -78,7 +78,7 @@ class Debug_menu:
 
             # display settings
             self.display.fill((0, 20, 0))  # play screen
-            create_text(self.display, "Strong Hold 2 Debug Menu", "Yellow", (self.display_size[0] / 2, 20))
+            quick_display_text(self.display, "Strong Hold 2 Debug Menu", "Yellow", (self.display_size[0] / 2, 20))
 
             if testing:
                 operation = self.options[self.current]
@@ -92,5 +92,4 @@ class Debug_menu:
             self.draw_options()
 
             pygame.display.update()
-        else:
-            pygame.quit()
+        pygame.quit()

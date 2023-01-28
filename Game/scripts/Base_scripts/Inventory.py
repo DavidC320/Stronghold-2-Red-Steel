@@ -10,6 +10,9 @@ class Inventory:
         self.inventory_limit = inventory_limit
         self.used_item_ids = []
 
+    def can_use_inventory(self):
+        return len(self.inventory) > 0
+
     def generate_id(self):
         if len(self.used_item_ids) == 0:
             self.used_item_ids.append(0)

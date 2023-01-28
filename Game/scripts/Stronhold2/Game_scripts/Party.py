@@ -15,18 +15,85 @@ class Party_manager:
         self.team_limit = team_limit  # How many allies can be in a party at once
         self.current_member = 0
         self.used_ally_ids = []
+        self.playable_max = 4
+
+    def regain_stamina(self, regain):
+        "Regains the stamina in all living team members"
+        for index in self.get_alive[0]:
+            self.team[index].change_stamina(regain)
+            self.team[index].build_icon_text()
+
+    @property
+    def true_index(self):
+        return self.get_alive[0][self.current_member]
     
     @property
     def current_ally(self):
-        return self.team[self.current_member]
+        return self.team[self.true_index]
+
+
+    @property
+    def get_alive(self):
+        "Returns a two lists"
+        "A list of indexes of living members"
+        "A list of indexes of dead members"
+        alive_list = []
+        dead_list = []
+        for member in self.team:
+            if member.dead:
+                dead_list.append(self.team.index(member))
+            else:
+                alive_list.append(self.team.index(member))
+        return alive_list, dead_list
+
+    @property
+    def get_playable(self):
+        "Return a list of index for playable characters"
+        pass
+
+        # keeping the end index equal to or lower than the max playble
+        playable_length = self.playable_max
+        alive = self.get_alive[0]
+        if len(alive) < playable_length:
+            playable_length = len(alive)
+        return alive[:playable_length]
+
+    def display_team_icons(self, display, show_playable):
+        num = 0
+        for member in self.team:
+            is_selected = False
+            is_playable = False
+
+            if len(self.get_alive[0]) > 0:
+                if self.team.index(member) == self.get_alive[0][self.current_member]:
+                    is_selected = True
+
+            if num in self.get_playable and show_playable:
+                is_playable = True
+
+            member.display_combat_icon(display, is_playable, is_selected, show_playable)
+            num += 1
 
     def change_current(self, places = 1):
-        party_size = len(self.team) -1
+        ran_thru_full = False
+        ran_thru_playable = False
+
+        party_size = len(self.get_alive[0]) -1
+        play_size = len(self.get_playable) -1
+
         self.current_member += places
+
         if self.current_member > party_size:
             self.current_member = 0
+            ran_thru_full = True
+
+        elif self.current_member > play_size:
+            ran_thru_playable = True
+
         elif self.current_member < 0:
             self.current_member = party_size -1
+
+        return ran_thru_full, ran_thru_playable
 
     def add_members(self, party_list, add_to_party = True):
         # Function to add party members into the team. This only excepts Base_Character classes and will not except anything else
