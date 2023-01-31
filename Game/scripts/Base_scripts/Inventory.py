@@ -1,4 +1,6 @@
 # 12/12/2022
+from random import choice
+from Item_info import basis_items, effect
 
 class Inventory:
     def __init__(self, inventory_limit = 20):
@@ -9,6 +11,21 @@ class Inventory:
         # information
         self.inventory_limit = inventory_limit
         self.used_item_ids = []
+
+        self.generate_items()
+
+    def generate_items(self, number= 16):
+        items = []
+        for _ in range(number):
+            item = choice(basis_items)
+            print(item.properties)
+            items.append(item)
+        print(items, "items")
+        self.inventory = items
+        for item in self.inventory:
+            print(item.properties)
+        print(self.inventory, "inventory")
+        
 
     def can_use_inventory(self):
         return len(self.inventory) > 0
@@ -41,6 +58,8 @@ class Inventory:
                 non_filled.append(item)
         # Goes through all of the items that aren't filled
         move_to_filled = []  # this is where the index of filled items will go to for removal
+        
+        index = 0
         for item in non_filled:
             item_name = item.name
             matching = []

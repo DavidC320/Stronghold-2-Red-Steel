@@ -1,4 +1,7 @@
 # 9/192022
+from Status_effects import Status_effect
+
+
 def item_converter(self, i):
         # converts item dictionaries into items
         item_category = i.get("category")
@@ -52,6 +55,18 @@ class Item_base:
         self.energy_spend = energy_spend
         self.setup_item
 
+        # special varablies
+        self.phantom_uses = 0  # used for checkin if an item can be used without completely spending from the current amount
+
+    def can_use(self, stamina):
+        "Character stamina"
+        enough_stamina = stamina >= self.energy_spend
+        is_avalivble = self.quantity - self.phantom_uses > 0
+
+        if enough_stamina and is_avalivble:
+            return True
+        return False
+
     #########
     # Setup #
     #########
@@ -61,8 +76,11 @@ class Item_base:
         # sets up character
 
         # makes sure these are lists
+        print(self.name)
+        print(self.properties, "pre pops")
         if self.properties == None:
             self.properties = []
+        print(self.properties, "pro pops")
         if self.flags == None:
             self.flags = []
 
@@ -167,6 +185,7 @@ class Item_base:
 
     def use_item(self, number = 1):
         # uses an item getting rid of it
+        yield self.properties
         if self.quantity > 0:
             self.quantity -= number
             if self.quantity <= 0:
@@ -223,3 +242,25 @@ subcategory_flags = {
     "back" : ("equip_back"),
     "weapon" : ("equip_weapon")
 }
+
+#########
+# Items #
+#########
+
+effect = (
+    Status_effect("50% Heal", "stat %", "health", .5, 0, length_type= "temporary"),
+    Status_effect("50% Revive", "stat %", "health", .5, 0, length_type= "temporary"),
+    Status_effect("Full Heal", "stat %", "health", 1, 0, length_type= "temporary")
+    )
+
+basis_items = (
+    Medical_item(None, "Half pot", "A Small potion", "heal", None, [effect[0]], None, None, 20, 1, energy_spend= 1),
+    # Medical_item(None, "Revive potion", "A Small potion", "revive", None, [effect[1]], None, None, 20, 1, energy_spend= 1),
+    Medical_item(None, "Full pot", "A pretty big potion", "heal", None, [effect[2]], None, None, 20, 1, energy_spend= 1)
+    )
+
+basis_weapons = (
+    Equipment_item(None, "fist", "Bare hands, you feel naked.", "weapon", None, None, "equipped", ["fighter"], 1, 1, attack=5),
+    Equipment_item(None, "slingshot", "Makeshift isn't it.", "weapon", None, None, "equipped", ["hunter"], 1, 1, attack=5),
+    Equipment_item(None, "wand", "few magic comes out ow.", "weapon", None, None, "equipped", ["caster"], 1, 1, attack=5)
+)

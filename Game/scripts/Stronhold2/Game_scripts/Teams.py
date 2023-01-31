@@ -32,7 +32,7 @@ class Enemy(Team_base):
             for member in self.party.team:
                 char_size = member.rect.size[0] / 2  # makes sure the enemies can't get behind ui elements
                 x_pos = randint(x_min + char_size, x_max - char_size)
-                member.rect.midbottom = (x_pos, y)
+                member.rect.midbottom = (x_pos, y-20)
                 print(member.rect.midbottom)
 
 

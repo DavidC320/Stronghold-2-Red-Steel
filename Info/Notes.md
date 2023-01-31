@@ -1,5 +1,40 @@
 # Notes
 
+## 1/31/2023
+
+    Yesterday I got to show off the game so far and everyone thought it was pretty good. Got some feedback mostly on buttons. Today I need to fix the inventory because it's broken.
+---
+Issues
+
+The inventory organizer is broken deleting item groups. To fix this I need to completely redo it.
+
+## 1/29/2023
+
+    Here are the current problems with this game.
+    1. Dead characters moves where playing. Fixed
+    2. Characters keep attacking dead chracters
+    3. Items still need to be added
+        Defenders need to be able to get the .5 damage resistance
+    New problems
+    4. When a charter that was defending dies, the character is still targeted
+
+---
+   Dead moves
+   I fixed this problem by making the move interpreter ignore dead users which wouldn't set off the move start time.
+
+---
+    Characters keep attacking dead
+    This will be very difficult to fix or tedious. What is needed to fix this problem is a check for dead targets and a check for living targets.
+    The first part is easy if the target is dead then select a new target using a choice funtion on the target living list but the check for living targets would need to do an emideate stop to the moves. so that's a clear for global moves
+    Fixed I did by doing two checks. if the target is dead and if their are avaible targets which made the game skip those moves in the move interpreter
+
+---
+    Items need to be added
+    This is the hardest part which will require a new status system. This new way of doing this will involve temporary statuses that only last a single turn not round. This will help with all other items mostly just medical as medical items like healing and reviving need to do stat changes to the target but needs to be imedfiate since all other items like boosters, deployables and weapons can have status effects attached to them making things more confusing. To do this I'll create a sperete list for tempory statuses that will be played everytime the character is used which will get rid of the temporary effect
+
+    New problem
+    The Inventory doesn't have an add item funtion in it. This is pretty odd so I need to look at that.
+
 ## 1/28/2023
 
     After yesterday I've given myself a break again but whatever. Now is time to interpret what I need to do before Monday. First feedback.

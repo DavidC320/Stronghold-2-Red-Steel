@@ -1,8 +1,9 @@
 # 9/192022
-from random import randint
+from random import randint, choice
 
 from Game_info import character_life_forms
-from Item_info import Equipment_item, Item_base
+from Status_effects import Status_manager
+from Item_info import Equipment_item, Item_base, basis_weapons
 
 def build_character(dictionary):
     a = dictionary
@@ -108,7 +109,7 @@ class Base_Character:
         unused_slots = self.arm_slots + len(self.hands)
         # Adds default items into unused slots in the character
         for _ in range(unused_slots):
-            self.hands.append(Equipment_item(None, "fist", "Bare hands, you feel naked.", "weapon", None, None, "equipped", ["fighter"], 1, 1, attack=5))
+            self.hands.append(choice(basis_weapons))
         
         self.weakness = character_life_forms.get(self.life_form).get("weakness")
 
@@ -116,6 +117,7 @@ class Base_Character:
     def check_if_dead(self):
         if self.current_hp <= 0:
             self.dead = True
+            self.current_hp = 0
         else:
             self.dead = False
 
@@ -271,7 +273,7 @@ class Base_Character:
 
     @property
     def can_use_defend(self):
-        if self.current_stamina >= 1:
+        if self.current_stamina >= 4:
             return True
         return False
 
@@ -289,6 +291,16 @@ class Base_Character:
     ################################################################################################################################################
     #################################################################### Checks ####################################################################
     ################################################################################################################################################
+
+    def grab_threshold_data(self, weapon):
+        damage, pro = self.grab_weapon_info(weapon)
+        damage += self.attack
+        print(pro)
+        pro[0] = round(pro[0] * damage)
+        pro[1] = round(pro[1] * damage)
+        print(pro)
+        return pro
+
     @property
     def grab_weapons_in_hands(self):
         weapons = []
@@ -346,8 +358,6 @@ class Base_Character:
             proficiency[0] %= number_of_used * 100
             proficiency[1] %= number_of_used * 100
             damage /= number_of_used  # Average of all used weapon's damage
-            
-            print(proficiency, damage)
 
             damage = self.get_damage(damage, proficiency)
             return damage
@@ -363,16 +373,27 @@ class Base_Character:
 
         return damage
 
+    def heal_damage(self):
+        stat_effect = self.status_effects.grab_effect_type("stat %")
+        print(stat_effect)
+        if stat_effect:
+            if stat_effect.effect_operation == "health":
+                self.current_hp += round(self.base_hp * stat_effect.number)
+                if self.current_hp > self.base_hp:
+                    self.current_hp = self.base_hp
+
     def take_damage(self, number):
         # takes away jit points from the character
         # This also returns remaining damage.
         over_damage = 0
+
+        resistance_effect = self.status_effects.grab_effect_type("resistance")
+        if resistance_effect:
+            number * resistance_effect.number
+
         self.current_hp -= number
         self.check_if_dead
-        if self.dead:
-            over_damage = self.current_hp * -1
-            self.current_hp = 0
-        return over_damage
+        return number
 
     def change_stamina(self, number):
         self.current_stamina += number
@@ -388,61 +409,3 @@ class Base_Character:
 #############################################################################################################################################################################
 ############################################################################## Base characters ##############################################################################
 #############################################################################################################################################################################
-
-
-class Status_manager:
-    def __init__(self):
-        self.status_effects = []
-
-    def chance_add_effect(self, int_chance, effect):
-        chance = randint(0, 100)
-        print(chance, chance >= int_chance)
-        if chance >= int_chance:
-            self.cure_effect(effect.name)
-            self.status_effects.append(effect)
-
-    def cure_effect(self, effect_name):
-        for effect in self.status_effects:
-            if effect.name == effect_name:
-                index =  self.status_effects.index(effect)
-                self.status_effects.pop(index)
-
-    def grab_effect_name(self, effect_name):
-        for effect in self.status_effects:
-            print(effect)
-            if effect.name == effect_name:
-                return effect
-        else:
-            return None
-
-    def grab_effect_type(self, effect_type):
-        effects = []
-        for effect in self.status_effects:
-            if effect.effect_type == effect_type:
-                effects.append(effect)
-
-    def loop_effects(self):
-        for effect in self.status_effects:
-            effect.length -= 1
-            if effect.length < 0 and not effect.immortal:
-                index =  self.status_effects.index(effect)
-                self.status_effects.pop(index)
-
-
-class Status_effect:
-    "A object that contains status data"
-    def __init__(self, name, effect_type, effect_operation, number, length, immortal= False):
-        self.name = name
-        self.effect_type = effect_type
-        self.effect_operation = effect_operation
-        self.number = number
-        self.immortal = immortal
-        self.length = length
-
-"""
-effect types
-    redirect - changes the target to a different target
-    resistance - changes how much damage is received
-
-
-"""

@@ -1,11 +1,11 @@
 # Stronghold 2 Red Steel
 
     Start date 9/19/2022
-    Version 1.5.1 Combat and Moves
+    Version 2.1.0 Combat and Items
 
 ## Current Status: Resumed
 
-    Working on Combat moves and turns.
+    Working on getting items working properly
 
 ## General information
 
@@ -13,7 +13,9 @@
 
 ## Inspirations
 
-    Cataclysm Dark Days Ahead [****-]
     The Denpa Men Trilogy [*****]
+    Cataclysm Dark Days Ahead [****-]
+    Minetest [***--]
+    Minecraft [**---]
     Pokemon [*----]
     The Binding of Issac [*----]

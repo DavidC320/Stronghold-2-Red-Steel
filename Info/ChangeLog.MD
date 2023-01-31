@@ -1,8 +1,45 @@
 # ChangeLog
 
+## 1/31/2023 2.1.0 Combat and Items
+
+    Characters
+        Status manager was moved to another file
+        characters can now have different weapons
+        defend now costs 4 stamina
+        Characters can now heal from items
+        Characters can now be affected by status effects.
+
+    Inventory
+        The inventory can now generate basis items
+            half pot
+            full pot
+
+    Items
+        Items now have phantom uses
+        Items now have a can use funtion to check if the item is availble to use
+            stamina > energy spend
+            quantity - phantom_uses > 0
+        Items now contain prebuilt items and effects // effects will be moved to the Status effects file
+    
+    Created the Status effects file
+
+    Combat
+        move manager and moves class where moved to a new file
+        Now has music from the games Alien storm, kid Chameleon, Boogerman, and Master of Monsters from the Saga Genesis. These are place holder and will be removed.
+        build_team_menu_action can now interpret items.
+        items can now be accesed
+        the game now has told controls
+        The game now has a score board
+        The move interpereting funtion time has changed so that the move time is dynamic to a certain extent.
+        You can now use esc to back out of a action
+
+    Created the Move_manager file
+
+    Created the Music_player file
+
 ## 1/28/2023 2.0.0 Combat Alpha
 
-    The game now preoperly stops
+    The game now properly stops
     Characters
         Now has status effect support
         Now has can_use for all of the actions such as weapon, defend, and pockets
@@ -12,18 +49,17 @@
         Menu action now has extra data
         Implemented the move manager
         Overhauled how info is built in buttons to allow extra info
-        Redid all of the build_combat_icons funtion since characters icons build themselves out side of the combat object.
+        Redid all of the build_combat_icons function since characters icons build themselves out side of the combat object.
         Created the move state and result state and enemy state
     Party
         The max playable is now a int var
         team members now regain stamina
-        get alive and get playable are now funtions
+        get alive and get playable are now functions
             living - gets a index list of all living members
             playable - gets the indexes of playable members from the living list using the max      playable
     characters will now show if they died for clearly
-    Created the quick_display_text by dissmanteling the create text funtion in the tool box
+    Created the quick_display_text by dismantling the create text function in the tool box
     The tool box can now use timers.
-
 
 ## 1/17/2023
 

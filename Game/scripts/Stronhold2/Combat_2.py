@@ -1,20 +1,11 @@
 # 1/2/2023
 import pygame
-from random import choices, randrange
+from random import randrange
 
 from Game_scripts.Teams import Enemy
+from Game_scripts.Music_player import Music_manager
 from Game_scripts.Tool_box import quick_display_text, create_timer, create_text
-from Base_scripts.Character_Info import Status_effect
-
-class Character_move:
-    def __init__(self, user_team, user_index, action, action_index, target_team, target_index, speed= 0):
-        self.user_team = user_team
-        self.user_index = user_index
-        self.action = action
-        self.action_index = action_index
-        self.target_team = target_team
-        self.target_index = target_index
-        self.speed = speed
+from Game_scripts.Move_manager import Move_manager
 
 class Menu_action:
     "Creates a section of the action menu to display in the game"
@@ -42,380 +33,7 @@ class Menu_action:
         self.column_row = column_row
         self.show_buttons = show_buttons
 
-        self.options = options 
-
-class Move_manager:
-    "A class built to hand with character moves"
-    def __init__(self, combat_data):
-
-        self.combat_data = combat_data
-        self.player = self.combat_data.player_data
-        self.enemy = self.combat_data.enemy_data
-        
-        self.move_index = 0
-        self.global_moves = []
-        self.created_moves = []
-        self.current_move = [None, None, None, None]
-        self.starting_move = True
-
-        self.current_display_move = (None, None)
-
-    ########################################################################################################################################################
-    ######################################################################## set up ########################################################################
-    ########################################################################################################################################################
-
-    def reset_move_data(self):
-        self.starting_move = True
-        self.move_index = 0
-        self.global_moves.clear()
-        self.created_moves.clear()
-        self.current_move = [None, None, None, None]
-
-
-    @property
-    def set_up_moves(self):
-        "organizes the moves so by speed"
-        self.starting_move = True
-        self.global_moves.sort(key= self.grab_move_speed)
-
-    ########################################################################################################################################################
-    ######################################################################## set up ########################################################################
-    ########################################################################################################################################################
-
-    ########################################################################################################################################################
-    #################################################################### Grab functions ####################################################################
-    ########################################################################################################################################################
-
-    def grab_action_object_lists(self, member, state):
-        "Used to get item lists that the member is apart of"
-
-        inventories = {
-            "enemy" : self.enemy.inventory.inventory,
-            "player" : self.player.inventory.inventory
-        }
-
-        action_list = {
-            "attack" : member.grab_weapons_in_hands,
-            "pocket" : member.hands,
-            "inventory" : inventories.get(state)
-        }
-        return action_list
-
-    
-    @property
-    def team_data(self):
-        player = self.player
-        enemy = self.enemy
-        return {
-            "player" : [
-                player.party.team,
-                player.party.get_alive,
-                player.party.current_member,
-                player.inventory.can_use_inventory(),
-                enemy.inventory.inventory
-            ],
-            "enemy" : [
-                enemy.party.team,
-                enemy.party.get_alive,
-                enemy.party.current_member,
-                enemy.inventory.can_use_inventory(),
-                enemy.inventory.inventory
-            ]
-        }
-
-    
-    def grab_move_speed(self, move):
-        "Used in sorting moves"
-        return move.speed
-
-
-    @property
-    def get_current_global_move(self):
-        "Grabs the current move for displaying and interpreting"
-        return self.global_moves[self.move_index]
-
-
-    ########################################################################################################################################################
-    #################################################################### Grab functions ####################################################################
-    ########################################################################################################################################################
-
-    #######################################################################################################################################################
-    ###################################################################### Auto move ######################################################################
-    #######################################################################################################################################################
-
-    def auto_member(self):
-        "Creates moves for unplayable characters"
-        state = self.combat_data.state
-
-        teams = self.team_data
-        team_data = teams.get(state)
-        team = team_data[0]
-        living_indexes = team_data[1][0]
-        start_index = team_data[2]
-        can_use_inventory = team_data[3]
-
-        for member_index in living_indexes[start_index:]:
-
-            member = team[member_index]
-            self.auto_move_maker(member, can_use_inventory, state)
-            self.global_moves.extend(self.created_moves)
-
-            self.created_moves.clear()
-            if state == "player":
-                next_turn = self.player.party.change_current()[0]
-                if next_turn:
-                    self.combat_data.state = "enemy"
-                    self.auto_move = False
-
-            elif state == "enemy":
-                next_turn = self.enemy.party.change_current()[0]
-                if next_turn:
-                    self.combat_data.state = "moves"
-
-
-    def auto_move_maker(self, member, can_use_inventory, state):
-        "Creates moves for a character"
-        # action
-        action, index = self.auto_move_action(member, can_use_inventory, state)
-
-        if action != "end turn":
-            # target
-            target_team, target_index = self.auto_move_target(member, action, index, state)
-
-            self.current_move = [action, index, target_team, target_index]
-            self.build_move(self.combat_data.state)
-
-
-    def auto_move_action(self, member, can_use_inventory, state):
-        "The first portion of the auto move that creates the action and the index"
-        action = None
-        index = None
-
-        # gets the action
-        possible_actions = member.available_actions
-        if can_use_inventory:
-            possible_actions.append("inventory")
-
-        action = choices(possible_actions)[0]
-
-        # gets the action index
-        action_lists = self.grab_action_object_lists(member, state)
-
-        if action in list(action_lists.keys()):
-            index = randrange(0, len(action_lists.get(action)))
-
-        return action, index
-
-
-    def auto_move_target(self, member, action, item_index, state):
-        "The last portion of the auto move that sets a target for the move"
-        target_team = None
-        target_index = None
-
-        action_list = self.grab_action_object_lists(member, state)
-
-        # creates the target
-        if action == "attack":
-            target_team, target_index = self.get_target("target_enemy", False, state)
-
-        elif action == "defend":
-            target_team, target_index = self.get_target("target_ally", False, state)
-
-        elif action in list(action_list.keys()):  # if the action need items
-            item = action_list.get(action)[item_index]
-            target_team, target_index = self.item_get_target(item, state)
-
-        return target_team, target_index
-
-
-    def get_target(self, target_team, get_dead, state):
-        "returns the string of team target and index of target"
-        grab_dead = {
-            True : 1,
-            False : 0
-        }
-        targets = {
-            "player" : {
-                "target_ally" : "player",
-                "target_enemy" : "enemy"
-            },
-            "enemy" : {
-                "target_ally" : "enemy",
-                "target_enemy" : "player"
-            }
-        }
-
-        team_targets = targets.get(state)
-        teams = self.team_data
-
-        target_team = team_targets.get(target_team)
-        segmented_teams = teams.get(target_team)[1]
-        target_dead = grab_dead[get_dead]
-
-        target_index = choices(segmented_teams[target_dead])[0]
-        return target_team, target_index
-
-
-    def item_get_target(self, item, state):
-        "interprets items into moves"
-        target_team = None
-        target_index = None
-
-        flags = item.flags
-        target_dead = "target_dead" in flags
-
-        if "target_ally" in flags:
-            target_team, target_index = self.get_target("target_ally", target_dead, state)
-
-        elif "target_enemy" in flags:
-            target_team, target_index = self.get_target("target_enemy", target_dead, state)
-        
-        return target_team, target_index
-
-    #######################################################################################################################################################
-    ###################################################################### Auto move ######################################################################
-    #######################################################################################################################################################
-
-    def build_move(self, state):
-        "Creates a character move that will be placed in the created move list"
-
-        if state in ("player", "enemy"):
-            character_index = {
-                "player" : self.player.party.true_index,
-                "enemy" : self.enemy.party.true_index
-            }
-
-            user_team = state
-            user_index = character_index.get(user_team)
-            action, action_index, target_team, target_index = self.current_move
-            move = Character_move(user_team, user_index, action, action_index, target_team, target_index)
-            self.created_moves.append(move)
-            self.spend_character_stamina(move)
-
-    def spend_character_stamina(self, move):
-        "spends the characters stamina"
-        user_team = move.user_team
-        user_index = move.user_index
-        action = move.action
-        action_index = move.action_index
-        # getting member
-        team = self.team_data.get(user_team)[0]
-        member = team[user_index]
-
-        # getting action
-        if action == "defend":
-            member.change_stamina(-1)
-        else:
-            ivens = self.grab_action_object_lists(member, user_team)
-            used_inventory = ivens.get(action)
-            item =  used_inventory[action_index]
-            member.change_stamina(-item.energy_spend)
-        member.build_icon_text()
-
-    def move_player(self):
-        "Plays though all of the moves"
-        if not self.starting_move:
-            self.move_index += 1
-        self.starting_move = False
-
-        if self.move_index > len(self.global_moves) - 1:
-            self.combat_data.state = "result"
-            self.starting_move = True
-            self.move_index = 0
-            self.global_moves.clear()
-
-        else:
-            current_move = self.get_current_global_move
-            self.interpret_move(current_move)
-        self.combat_data.next_move_start_time = self.combat_data.current_time
-
-##################################################################### Going through moves ##################################################################### 
-
-    def interpret_move(self, move):
-        "Interprets teh current move"
-        parties = self.team_data
-
-        user_party = parties.get(move.user_team)[0]
-        user = user_party[move.user_index]
-
-        target_party = parties.get(move.target_team)[0]
-        target = target_party[move.target_index]
-
-        number = None
-        killed = False
-        target_team = move.user_team
-        target_index = move.target_index
-
-        action = move.action
-        if action == "defend":
-            does_target_already_have_defend = target.status_effects.grab_effect_name("defended")
-            if does_target_already_have_defend:
-                effect = does_target_already_have_defend
-                us_party = parties.get(effect.effect_operation)
-                us_user = us_party[effect.number]
-                us_user.status_effects.cure_effect("defender")
-
-            defended_effect = Status_effect("defended", "redirect", move.user_team, move.user_index, 0)
-            defender_effect = Status_effect("defender", "resistance", "damage", .5, 0)
-            user.status_effects.chance_add_effect(100, defender_effect)
-            target.status_effects.chance_add_effect(100, defended_effect)
-        
-        elif action == "attack":
-            does_target_already_have_defend = target.status_effects.grab_effect_name("defended")
-            if does_target_already_have_defend:
-                effect = does_target_already_have_defend
-                target_team = effect.effect_operation
-                us_party = parties.get(effect.effect_operation)
-                target = us_party[effect.number]
-            
-            number = user.attack_roll()
-            target.take_damage(number)
-            killed = target.dead
-        else:
-            "Not now"
-        user.build_icon_text()
-        target.build_icon_text()
-
-        self.create_display_move(user, move.user_team, target, action, number, killed)
-        if killed:
-            self.remove_dead_actions(target_team, target_index)
-
-
-    def create_display_move(self, user, user_team,  target, action, number = None, killing_blow = False):
-        "Creates a text box to tell what is happening"
-        pass
-        user_name = user.name
-        target_name = target.name
-        action_dict = {
-            "attack" : f"attacked Dealing {number} damage!",
-            "defend" : f"defended {target_name}"
-        }
-
-        text = f"{user_name} {action_dict.get(action)}"
-        if killing_blow:
-            text += " Killing them"
-        self.current_display_move = (text, user_team)
-
-    def remove_dead_actions(self, team, character_index):
-        "Removes actions containing a user and user_index matching the dead character"
-        for move in self.global_moves:
-            if (move.user_team, move.user_index) == (team, character_index):
-                self.global_moves.pop(self.global_moves.index(move))
-        print("ooh")
-
-    def display_move(self, display, rect):
-        "Takes the current move grabbed form get_current_global_move to display on screen along with highlighting the user and target"
-        
-
-        color = {
-            "enemy" : "#510000",
-            "player" : "#035200",
-            None : "White"
-        }
-        quick_display_text(display, self.current_display_move[0], color.get(self.current_display_move[1]), rect.center)
-
-##################################################################### Going through moves ##################################################################### 
-
+        self.options = options
 
 ################################################################################################################################################################
 ############################################################################ Combat ############################################################################
@@ -425,6 +43,7 @@ class Move_manager:
 class Combat:
     def __init__(self, display, clock, player):
         # screen
+        self.music_manager = Music_manager()
         
         self.display = display
         # clock I have no idea what this does
@@ -579,8 +198,6 @@ class Combat:
             # getting the location of 
             texts = []
             if self.info_list[info_index].extra_text:
-                print(button)
-                print(button[0].midtop)
                 x, y = button[0].midtop
                 title_info = [self.info_list[info_index].title, (x, y+ 10)]
                 texts.append(title_info)
@@ -590,7 +207,6 @@ class Combat:
                 text_bottom_pos = text_rect.bottom
                 button_bottom_pos = button[0].bottom
                 size_range = (button_bottom_pos - text_bottom_pos)/2
-                print(size_range, text_bottom_pos, button_bottom_pos)
                 offset = int(size_range / len(self.info_list[info_index].extra_text))
 
                 num = 0
@@ -599,7 +215,7 @@ class Combat:
 
 
                     pos = (x, true_offset)
-                    texts.append((data, pos))
+                    texts.append((str(data), pos))
                     num += 1
 
 
@@ -616,11 +232,16 @@ class Combat:
 
     #########################################################################################################################################################################
     ############################################################################## Action Menu ##############################################################################
-    def build_team_menu_action(self, team= "player", dead= False):
+    def build_team_menu_action(self, team= "target_ally", dead= False):
         teams = {
-            "player" : self.player_data.party.team,
-            "enemy" : self.enemy_data.party.team
+            "target_ally" : self.player_data.party.team,
+            "target_enemy" : self.enemy_data.party.team
         }
+        team_conversion = {
+            "target_ally" : "player",
+            "target_enemy" : "enemy"
+        }
+
         team_menu = []
         for member in teams.get(team):
             can_use_dict = {
@@ -630,14 +251,26 @@ class Combat:
             }
             can_use = can_use_dict.get(dead)
             health = f"Hp {member.current_hp} / {member.base_hp}"
-            team_menu.append(Menu_action(member.name, extra_text=[health], can_use=can_use, target= team, end_type= "move"))
+            team_menu.append(Menu_action(member.name, extra_text=[health], can_use=can_use, target= team_conversion.get(team), end_type= "move"))
         return team_menu
 
-    def build_move_action(self, items):
-
+    def build_move_action(self, items, move= "attack"):
         weapon_menu = []
+        member = self.player_data.party.current_ally
+        stamina = member.current_stamina
         for item in items:
-            weapon_menu.append(Menu_action(item.name, can_use=True, move="attack", button_display="spin", show_buttons= False, options= self.build_team_menu_action("enemy")))
+            if move == "attack":
+                weapon_menu.append(Menu_action(item.name, extra_text=[item.skills, member.grab_threshold_data(item), item.energy_spend], can_use=item.can_use(stamina), move="attack", button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_enemy")))
+            else:
+                flags = item.flags
+                allow_dead = "target_dead" in flags
+
+                if "target_ally" in flags:
+                    weapon_menu.append(Menu_action(item.name, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_ally", allow_dead)))
+                elif "target_enemy" in flags:
+                    weapon_menu.append(Menu_action(item.name, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_enemy", allow_dead)))
+                else:
+                    weapon_menu.append(Menu_action(item.name, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False))
         return weapon_menu
 
     def build_move_menu(self):
@@ -660,8 +293,10 @@ class Combat:
             ))
         ))
 
-        item_menu = Menu_action("Use an Item",can_use= False , options=(
-            Menu_action("Use Inventory!", can_use= False, button_display= "spin"),
+        inventory_menu = self.build_move_action(self.player_data.inventory.inventory, "inventory")
+
+        item_menu = Menu_action("Use an Item" , options=(
+            Menu_action("Use Inventory!", can_use= self.player_data.inventory.can_use_inventory() ,button_display= "spin", options= inventory_menu),
             Menu_action("Use Pockets!", can_use= False, button_display= "spin")
         ))
         
@@ -766,11 +401,13 @@ class Combat:
         exit_type = next_option.end_type
         if exit_type == None:
             self.move_path.append(self.current_selection)
+            self.music_manager.play_sound(3)
 
         elif exit_type == "move":
             self.move_manager.build_move(self.state)
             self.move_manager.current_move= [None, None, None, None]
             self.move_path.clear()
+            self.music_manager.play_sound(4)
 
         elif exit_type == "turn":
             self.move_manager.global_moves.extend(self.move_manager.created_moves)
@@ -865,9 +502,12 @@ class Combat:
         if self.state == "player" and not self.auto_move:
             self.display_buttons()
             self.display_action_info()
+            quick_display_text(self.display, "Control with arrows.", "White", self.map.center)
+            x, y = self.control_panel.midtop
             if self.move_path:
-                x, y = self.control_panel.midtop
-                quick_display_text(self.display, "Back", "White", (x, y - 20))
+                quick_display_text(self.display, "<-- Back Button or Esc to go back.", "Black", (x, y - 20))
+            else:
+                quick_display_text(self.display, "Press Enter to make your moves.", "Black", (x, y - 20))
 
 
         if self.state == "moves":
@@ -893,13 +533,13 @@ class Combat:
         if not self.enemy_data.party.get_alive[0]:
             if self.debug:
                 self.init_combat()
-                print("player win")
+                self.scores[0] += 1
             else:
                 self.run_combat = False
         elif not self.player_data.party.get_alive[0]:
             if self.debug:
                 self.init_combat()
-                print("enemy lose")
+                self.scores[1] += 1
             else:
                 self.run_combat = False
         else:
@@ -932,6 +572,7 @@ class Combat:
         self.player_data.party.current_member = 0
 
     def init_combat(self):
+        self.music_manager.play_music()
         self.run_combat = True
         self.reset_combat()
         self.get_current_move_menu()
@@ -958,12 +599,10 @@ class Combat:
 
         if self.state == "player" and self.auto_move:
             self.move_manager.auto_member()
-            self.scores[0] += 1
         elif self.state == "enemy":
             self.move_manager.auto_member()
-            self.scores[1] += 1
         elif self.state == "moves":
-            if create_timer(self.current_time,3000, self.next_move_start_time) or self.move_manager.starting_move:
+            if create_timer(self.current_time, self.move_manager.move_display_time, self.next_move_start_time) or self.move_manager.starting_move:
                 self.move_manager.move_player()
         elif self.state == "result":
             self.results()
@@ -986,7 +625,7 @@ class Combat:
 
                         elif event.key == pygame.K_RETURN:  # enter
                             self.change_path()
-                        elif event.key == pygame.K_BACKSPACE:
+                        elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                             self.change_path(False)
 
     def play_combat(self):
@@ -996,3 +635,4 @@ class Combat:
             self.state_control()
             self.controller()
             self.display_ui()
+        self.music_manager.stop_music()

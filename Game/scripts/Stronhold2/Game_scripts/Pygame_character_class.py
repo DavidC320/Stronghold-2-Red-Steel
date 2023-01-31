@@ -64,7 +64,7 @@ class Stronghold_character(Base_Character):
             print("hi")
             self.name_text_rect = self.create_icon_text(.3, self.name, self.config.get("name"))
             self.health_text_rect = self.create_icon_text(.7, f"Hp: {self.current_hp} / {self.base_hp}", self.config.get("health"))
-            self.stamina_text_rect = self.create_icon_text(.9, f"St: {self.current_stamina} / {self.base_stamina}", self.config.get("health"))
+            self.stamina_text_rect = self.create_icon_text(.85, f"St: {self.current_stamina} / {self.base_stamina}", self.config.get("health"))
         else:
             print("nah")
 

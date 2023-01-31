@@ -10,6 +10,7 @@ from scripts.Stronhold2 import debug
 
 debug_menu = debug.Debug_menu()
 
+
 while True:
     debug_menu.run_debug()
     break
