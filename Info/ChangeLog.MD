@@ -1,5 +1,19 @@
 # ChangeLog
 
+## 2/5/2023
+
+    Changes that I don't want to record at the moment.
+    Characters
+        Skills now just affect accuracy.
+        weapons return data
+
+    Inventory
+        The organizer has now been revised to work properly.
+
+    Items
+        Fixed the issue with flags not working properly
+        now return data
+
 ## 1/31/2023 2.1.0 Combat and Items
 
     Characters

@@ -113,7 +113,6 @@ class Move_manager:
         "Grabs the current move for displaying and interpreting"
         return self.global_moves[self.move_index]
 
-
     ########################################################################################################################################################
     #################################################################### Grab functions ####################################################################
     ########################################################################################################################################################
@@ -270,7 +269,6 @@ class Move_manager:
 
             action, action_index, target_team, target_index = self.current_move
             
-            print(action)
             move = Character_move(user_team, user_index, action, action_index, target_team, target_index, user.base_speed)
             self.created_moves.append(move)
             self.spend_character_stamina(move)
@@ -292,6 +290,7 @@ class Move_manager:
             ivens = self.grab_action_object_lists(member, user_team)
             used_inventory = ivens.get(action)
             item =  used_inventory[action_index]
+            item.phantom_uses += 1
             member.change_stamina(-item.energy_spend)
         member.build_icon_text()
 
@@ -322,7 +321,6 @@ class Move_manager:
 
         target_party = parties.get(move.target_team)[0]
         target_lving_party = parties.get(move.target_team)[1][0]
-        print(target_lving_party)
         target = target_party[move.target_index]
 
         number = None
@@ -372,7 +370,6 @@ class Move_manager:
                 extra = item.name
                 for list_ef in item.use_item():
                     for effect in list_ef:
-                        print(effect)
                         target.status_effects.chance_add_effect(100, effect)
 
                 target.heal_damage()
@@ -416,10 +413,10 @@ class Move_manager:
         
 
         color = {
-            "enemy" : "#510000",
-            "player" : "#035200",
+            "enemy" : "Red",
+            "player" : "Green",
             None : "White"
         }
-        quick_display_text(display, self.current_display_move[0], color.get(self.current_display_move[1]), rect.center)
+        quick_display_text(display, self.current_display_move[0], color.get(self.current_display_move[1]), rect.center, font="Microsoft Uighur")
 
 ##################################################################### Going through moves ##################################################################### 

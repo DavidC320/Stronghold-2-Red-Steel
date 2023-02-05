@@ -120,13 +120,15 @@ class Party_manager:
         for _ in range(number):
             name_list = ("Atex", "Vito", "Tron", "Zekos", "phole", "Dikrak", "Zulnose", "Rinin", "Pineapple", "Eqix", "Drogos", "vilies", 
             "Teknozes", "Flemo", "Hi World", "Trogan", "Mockery", "Enix", "Gobo", "Tekneka", "Inplis", "Secsar", "Floob", "Trog", "Aris",
-            "Axel", "John", "Emile", "Jane", "William", "Null", "?", "Isiah", "Centrion", "Ikos", "Betar-23", "Xoncx", "Skackat")
+            "Axel", "John", "Emile", "Jane", "William", "Null", "?", "Isaiah", "Centrion", "Ikos", "Betar-23", "Xoncx", "Skackat","Wesley"
+            ,"PIEMAN", "ur mom", "pizza", "David", "cat", "Susie", "Kris", "Ivan", "Berdly", "Queen", "Frisk", "Noelle", "Robotnik", 
+            "Lancer", "Ralsei", "Sanic", "!", "1997", "Spamton")
             life_forms = list(character_life_forms.keys())
             #gets rid of none
             life_forms.pop(life_forms.index(None))
             life_form = choice(life_forms)
             name = choice(name_list)
-            member = Stronghold_character(None, name, None, life_form, None, "party", 0, 0, randint(5, 20), 20, randint(1, 10), 20, randint(1, 5), randint(0, 4), 5, 2, 0, randint(0, 4), 0, randint(0, 4), 0, randint(0, 4), 0)
+            member = Stronghold_character(None, name, None, life_form, None, "party", 0, 0, randint(5, 10), 15, randint(1, 10), 10, randint(1, 5), randint(0, 4), 5, 2, 0, randint(0, 4), 0, randint(0, 4), 0, randint(0, 4), 0)
             party.append(member)
         self.add_members(party)
 

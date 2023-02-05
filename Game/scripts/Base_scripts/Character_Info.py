@@ -1,5 +1,5 @@
-# 9/192022
-from random import randint, choice
+# 9/19/2022
+from random import randint, choice, random, randrange
 
 from Game_info import character_life_forms
 from Status_effects import Status_manager
@@ -48,19 +48,22 @@ class Base_Character:
         # Statistics
         self.level = level
         self.xp = xp
-        self.current_hp = current_health  # How much health is left
-        self.base_hp = health  # Maximum health
-        self.current_stamina = base_stamina   # How much base_stamina is left
-        self.base_stamina = base_stamina   # Maximum base_stamina
-        self.boosted_hitpoints = health # How much maximum health has been boosted
-        self.base_speed = base_speed  # how much their action is prioritized
-        self.base_defense = defense  # defense
-        self.base_attack = base_attack  # base character damage
+
+        self.current_hp = current_health
+        self.base_hp = health
+
+        self.current_stamina = base_stamina
+        self.base_stamina = base_stamina
+
+        self.base_speed = base_speed
+        self.base_defense = defense
+        self.base_attack = base_attack
+
         self.inventory_slots = inventory_slots
         self.arm_slots = arm_slots
         self.pocket_slots = pocket_slots
         
-        # Proficiencies
+        # Skills
         # Melee
         self.fighter_lv = fight_lv
         self.fighter_xp = fight_xp
@@ -77,6 +80,8 @@ class Base_Character:
         self.legs = legs 
         self.feet = feet
         self.back = back
+
+        # lists
         self.hands = hands
         self.pockets = pockets
 
@@ -292,14 +297,92 @@ class Base_Character:
     #################################################################### Checks ####################################################################
     ################################################################################################################################################
 
-    def grab_threshold_data(self, weapon):
+    ################################################################################################################################################
+    ############################################################## Damage Calculation ##############################################################
+    ################################################################################################################################################
+
+    def grab_weapon_info(self, weapon : Equipment_item):
+        "Grabs the data from the weapon and interprests the skills used"
+        "returns damage and skill power"
+        skills_used = weapon.skills
+
+        skills = {
+            "fighter" : self.fighter_lv,
+            "hunter" : self.hunter_lv,
+            "caster" : self.caster_lv
+        }
+        proficiency = {
+            None : 0,
+            0 : 2,
+            1 : 4,
+            2 : 6,
+            3 : 8,
+            4 : 10
+        }
+        skill_power = 0
+        number_of_skills_used = 0
+
+        for skill in skills_used:
+            prof = proficiency.get(skills.get(skill))
+            skill_power = prof
+            number_of_skills_used += 1
+
+        skill_power /= number_of_skills_used
+        
+        return weapon.attack, round(skill_power)
+
+    def get_damage(self, weapon_damage, accuracy):
+        # Returns a random number using the damage threshold * damage
+        damage = self.attack + weapon_damage
+
+        chance_land =  randint(0, 10)
+        if chance_land <= accuracy:
+            return damage
+        else:
+            return 0 
+
+    def attack_roll(self, weapon_index : list = [0]) -> int: 
+        "Grabs the the skills and damage from weapons in a list to return a damage number"
+        weapon_damage = 0
+        proficiency = 0
+        number_of_used = 0
+        weapons = self.grab_weapons_in_hands
+
+        for selected_weapon_index in weapon_index:
+            weapon = weapons[selected_weapon_index]
+
+            used_weapons_info = self.grab_weapon_info(weapon)
+            weapon_damage += used_weapons_info[0]
+
+            proficiency += used_weapons_info[1]
+
+            number_of_used += 1
+
+        if number_of_used != 0:
+            # correcting the proficiencies
+            proficiency /= number_of_used  
+            weapon_damage /= number_of_used  # Average of all used weapon's damage
+
+            damage = self.get_damage(weapon_damage, proficiency)
+
+        return damage
+
+    ################################################################################################################################################
+    ############################################################## Damage Calculation ##############################################################
+    ################################################################################################################################################
+
+
+    def weapon_data(self, weapon):
         damage, pro = self.grab_weapon_info(weapon)
-        damage += self.attack
-        print(pro)
-        pro[0] = round(pro[0] * damage)
-        pro[1] = round(pro[1] * damage)
-        print(pro)
-        return pro
+        quantity = f"{weapon.quantity} / {weapon.max_quantity}"
+        text = (
+            weapon.skills, 
+            f"Dm: {damage} + {self.attack}", 
+            f"Ac: {pro}", 
+            f"qt: {quantity}", 
+            f"-{weapon.energy_spend} st"
+        )
+        return text
 
     @property
     def grab_weapons_in_hands(self):
@@ -309,98 +392,33 @@ class Base_Character:
                 weapons.append(item)
         return weapons
 
-    def grab_weapon_info(self, weapon):
-        skills_used = weapon.skills
-
-        proficiency_class = {
-            "fighter" : self.fighter_lv,
-            "hunter" : self.hunter_lv,
-            "caster" : self.caster_lv
-        }
-        proficiency = {
-            0 : (.0, .20),
-            1 : (.20, .40),
-            2 : (.40, .60),
-            3 : (.60, .80),
-            4 : (.80, 1.00)
-        }
-        low_damage = 0
-        high_damage = 0
-        number_of_skills_used = 0
-        for skill in skills_used:
-            prof = proficiency.get(proficiency_class.get(skill))
-            if prof != None:
-                low_damage += prof[0]
-                high_damage += prof[1]
-                number_of_skills_used += 1
-
-        low_damage %= number_of_skills_used * 100
-        high_damage %= number_of_skills_used * 100
-        
-        return weapon.attack, [low_damage, high_damage]
-
-    def attack_roll(self, weapon_index = [0]): 
-        # gets the damage that the ally will deal
-        
-        damage = 0
-        proficiency = [0, 0]
-        number_of_used = 0
-        weapons = self.grab_weapons_in_hands
-        for selected_weapon in weapon_index:
-            weapon = weapons[selected_weapon]
-            used_weapons = self.grab_weapon_info(weapon)
-            damage += used_weapons[0]
-            proficiency = used_weapons[1]
-            number_of_used += 1
-
-        if number_of_used != 0:
-            # correcting the proficiencies
-            proficiency[0] %= number_of_used * 100
-            proficiency[1] %= number_of_used * 100
-            damage /= number_of_used  # Average of all used weapon's damage
-
-            damage = self.get_damage(damage, proficiency)
-            return damage
-        else:
-            return 0
-
-    def get_damage(self, weapon_damage, damage_threshold):
-        # Returns a random number using the damage threshold * damage
-        damage = self.attack + weapon_damage
-        low_damage = round(damage * damage_threshold[0])
-        high_damage = round(damage * damage_threshold[1])
-        damage = randint(low_damage, high_damage)
-
-        return damage
-
     def heal_damage(self):
+        "Place holder for applying effects to characters"
         stat_effect = self.status_effects.grab_effect_type("stat %")
-        print(stat_effect)
         if stat_effect:
             if stat_effect.effect_operation == "health":
                 self.current_hp += round(self.base_hp * stat_effect.number)
                 if self.current_hp > self.base_hp:
                     self.current_hp = self.base_hp
 
-    def take_damage(self, number):
-        # takes away jit points from the character
-        # This also returns remaining damage.
-        over_damage = 0
+    def take_damage(self, damage):
+        "Takes the number and subtracts it from the character"
+        "If the Character has a resistance it will multiply it to the damage"
 
         resistance_effect = self.status_effects.grab_effect_type("resistance")
         if resistance_effect:
-            number * resistance_effect.number
+            damage * resistance_effect.number
 
-        self.current_hp -= number
+        self.current_hp -= damage
         self.check_if_dead
-        return number
+        return damage
 
     def change_stamina(self, number):
         self.current_stamina += number
         if self.current_stamina <= 0:
             self.current_stamina = 0
             self.exhausted = True
-
+#im a marsh man moo mmo meow you know its me okay by jeff......my names jeffthe cide will start in 300 years yep easter egg
         elif self.current_stamina > self.base_stamina:
             self.current_stamina = self.base_stamina
             self.exhausted = False

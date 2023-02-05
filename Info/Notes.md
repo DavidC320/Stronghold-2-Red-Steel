@@ -1,5 +1,68 @@
 # Notes
 
+## 2/5/2023
+
+    Okay this will be a completely big overhaul that will have to do in order to make sure that items work all because of revives.
+
+### Goal
+
+Create an item selection system that allows the use of items dynamic.
+
+---
+
+The first issue that needs to be solved is item checks since each item needs to know if it can be used. I think the best way to do this is in combat in a function that takes the current team and member uh fuck. This needs to be rewritten.
+
+## 2/4/2023
+
+    This sucks... the invnetory is broken and it needs to be fxed.
+
+## 2/3/2023
+
+    More feedback mostly balance changes which i'm not looking at for the moment but their is a bug in the game
+
+### Bugs
+
+Items in the inventory always say that there is only one in a stack.
+
+## 2/2/2023
+
+    New style of notes so that I can use more of mark down
+
+### Goals
+
+1. Fix the bug where actions don't update after a round properly
+2. Make fundamental changes
+3. Make sure that enemies are using items correctly
+
+## 2/1/2023
+
+    Today I got feedback for the game that I need to organize.
+
+    bugs
+        the action menu doesn't update after a round
+            I just need to add an action
+
+    quality of life
+        Lower the game volume //
+        Make the move text brighter
+            Really easy to implement
+        Clear false selection in the menu
+            This will be pretty difficult for items but this can somewhat be achivable with the living and non living system
+        moves need to be visible on the arena
+        battle timer
+        Visualize moves
+        Mouse selection
+        Team commands
+
+    balancing
+        Auto end round when a team wipes
+        Lower how many items are generated
+        Lower stamina for test
+
+    fundamental changes
+        Add the evade stat
+        Change the threshold to affect accuracy and not damage
+
 ## 1/31/2023
 
     Yesterday I got to show off the game so far and everyone thought it was pretty good. Got some feedback mostly on buttons. Today I need to fix the inventory because it's broken.
@@ -12,7 +75,7 @@ The inventory organizer is broken deleting item groups. To fix this I need to co
 
     Here are the current problems with this game.
     1. Dead characters moves where playing. Fixed
-    2. Characters keep attacking dead chracters
+    2. Characters keep attacking dead characters
     3. Items still need to be added
         Defenders need to be able to get the .5 damage resistance
     New problems
@@ -25,8 +88,8 @@ The inventory organizer is broken deleting item groups. To fix this I need to co
 ---
     Characters keep attacking dead
     This will be very difficult to fix or tedious. What is needed to fix this problem is a check for dead targets and a check for living targets.
-    The first part is easy if the target is dead then select a new target using a choice funtion on the target living list but the check for living targets would need to do an emideate stop to the moves. so that's a clear for global moves
-    Fixed I did by doing two checks. if the target is dead and if their are avaible targets which made the game skip those moves in the move interpreter
+    The first part is easy if the target is dead then select a new target using a choice function on the target living list but the check for living targets would need to do an emideate stop to the moves. so that's a clear for global moves
+    Fixed I did by doing two checks. if the target is dead and if their are available targets which made the game skip those moves in the move interpreter
 
 ---
     Items need to be added

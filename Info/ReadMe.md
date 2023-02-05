@@ -1,7 +1,7 @@
 # Stronghold 2 Red Steel
 
     Start date 9/19/2022
-    Version 2.1.0 Combat and Items
+    Version 2.1.1 combat revision
 
 ## Current Status: Resumed
 

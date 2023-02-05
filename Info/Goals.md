@@ -1,21 +1,17 @@
 # Goals
 
-* Get items working
-  * Items currently are not working properly when the game was being play tested. Items would not spend properly and they where infinite
-    * This will be solved when I fix the inventory system then make it when at the end of every turn.
-  * The inventory destroys items for do to some issue.
-    * Completely redo how the item organizer works.
+## Major problem
 
----
+    Do to rushing development for the combat system, the code has gotten bloated and needs to be trimmed down and more legible.
 
-* Create an ability system so that defend can be put into that
-  * Make defend into an item that is placed in an ability list
+## initial problem
 
----
+    revive items don't work properly because the game need to some how check if there are available targets for the item. in this case it would be if their are dead characters on the same team
 
-* Optimize the code
-  * Do to rushing to get this playable, I need to go back and fix all the bad code in it.
+##  Plan
 
----
+1. Clean up the bloat in combat_2 and move_manager
+   1. Reorganize everything
+   2. disassemble code into functions
 
-* get ready to revisit movement
+2. Fix how items work in the game when selecting them

@@ -1,5 +1,5 @@
 # 9/192022
-from Status_effects import Status_effect
+from Status_effects import Status_effect, effects
 
 
 def item_converter(self, i):
@@ -76,17 +76,18 @@ class Item_base:
         # sets up character
 
         # makes sure these are lists
-        print(self.name)
-        print(self.properties, "pre pops")
         if self.properties == None:
             self.properties = []
-        print(self.properties, "pro pops")
         if self.flags == None:
             self.flags = []
 
         # grabs all of the flags for the item
-        self.flags.append(category_flags.get(self.category))
-        self.flags.append(subcategory_flags.get(self.subcategory))
+        
+        cf = category_flags.get(self.category)
+        sf = subcategory_flags.get(self.subcategory)
+        print(cf, sf)
+        self.flags.extend(cf)
+        self.flags.extend(sf)
 
 
     ###############################################################################################################################################################################
@@ -153,6 +154,12 @@ class Item_base:
 
         return item_effector_data
 
+    @property
+    def item_data(self):
+        quantity = f"Qt: {self.quantity - self.phantom_uses} / {self.max_quantity}"
+        spend = f"-{self.energy_spend} St"
+        return quantity, spend
+
     ###############################################################################################################################################################################
     ################################################################################## Save data ##################################################################################
     ###############################################################################################################################################################################
@@ -188,6 +195,7 @@ class Item_base:
         yield self.properties
         if self.quantity > 0:
             self.quantity -= number
+            self.phantom_uses -= number
             if self.quantity <= 0:
                 del self
 
@@ -224,43 +232,37 @@ class Equipment_item(Item_base):
 
 category_flags = {
     None : (),
-    "medical" : ("target_ally"),
-    "equipment": ("target_ally"),
-    "deployable": ("target_self", "open_party"),
-    "other": ()
+    "medical" : ["target_ally"],
+    "equipment": ["target_ally"],
+    "deployable": ["target_self", "open_party"],
+    "other": []
 }
 subcategory_flags = {
     None : (),
     # Medical
-    "heal" : ("percent_hp"),
-    "revive" : ("target_dead", "percent_hp"),
+    "heal" : ["percent_hp"],
+    "revive" : ["target_dead", "percent_hp"],
     # Equipment
-    "head" : ("equip_head"),
-    "body" : ("equip_body"),
-    "legs" : ("equip_legs"),
-    "feet" : ("equip_feet"),
-    "back" : ("equip_back"),
-    "weapon" : ("equip_weapon")
+    "head" : ["equip_head"],
+    "body" : ["equip_body"],
+    "legs" : ["equip_legs"],
+    "feet" : ["equip_feet"],
+    "back" : ["equip_back"],
+    "weapon" : ["equip_weapon"]
 }
 
 #########
 # Items #
 #########
 
-effect = (
-    Status_effect("50% Heal", "stat %", "health", .5, 0, length_type= "temporary"),
-    Status_effect("50% Revive", "stat %", "health", .5, 0, length_type= "temporary"),
-    Status_effect("Full Heal", "stat %", "health", 1, 0, length_type= "temporary")
-    )
-
 basis_items = (
-    Medical_item(None, "Half pot", "A Small potion", "heal", None, [effect[0]], None, None, 20, 1, energy_spend= 1),
-    # Medical_item(None, "Revive potion", "A Small potion", "revive", None, [effect[1]], None, None, 20, 1, energy_spend= 1),
-    Medical_item(None, "Full pot", "A pretty big potion", "heal", None, [effect[2]], None, None, 20, 1, energy_spend= 1)
+    Medical_item("B-1", "Half pot", "A Small potion", "heal", None, [effects[0]], None, None, 5, 1, energy_spend= 1),
+    # Medical_item("B-5", "Revive potion", "A Small potion", "revive", None, [effects[1]], None, None, 20, 1, energy_spend= 1),
+    Medical_item("B-2", "Full pot", "A pretty big potion", "heal", None, [effects[2]], None, None, 5, 1, energy_spend= 1)
     )
 
 basis_weapons = (
-    Equipment_item(None, "fist", "Bare hands, you feel naked.", "weapon", None, None, "equipped", ["fighter"], 1, 1, attack=5),
-    Equipment_item(None, "slingshot", "Makeshift isn't it.", "weapon", None, None, "equipped", ["hunter"], 1, 1, attack=5),
-    Equipment_item(None, "wand", "few magic comes out ow.", "weapon", None, None, "equipped", ["caster"], 1, 1, attack=5)
+    Equipment_item("B-0", "fist", "Bare hands, you feel naked.", "weapon", None, None, "equipped", ["fighter"], 1, 1, attack=3),
+    Equipment_item("B-3", "slingshot", "Makeshift isn't it.", "weapon", None, None, "equipped", ["hunter"], 1, 1, attack=3),
+    Equipment_item("B-4", "wand", "few magic comes out ow.", "weapon", None, None, "equipped", ["caster"], 1, 1, attack=3)
 )

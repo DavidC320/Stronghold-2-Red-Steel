@@ -205,13 +205,14 @@ class Combat:
                 # getting the range of availbe space
                 text_rect = create_text(self.info_list[info_index].title, "white", (x, y+ 10))[1]
                 text_bottom_pos = text_rect.bottom
+                y = text_bottom_pos
                 button_bottom_pos = button[0].bottom
-                size_range = (button_bottom_pos - text_bottom_pos)/2
+                size_range = (button_bottom_pos - text_bottom_pos )
                 offset = int(size_range / len(self.info_list[info_index].extra_text))
 
                 num = 0
                 for data in self.info_list[info_index].extra_text:
-                    true_offset = (y+10) + offset + (num) * offset
+                    true_offset = (y+ 10)+ (num) * offset
 
 
                     pos = (x, true_offset)
@@ -233,6 +234,7 @@ class Combat:
     #########################################################################################################################################################################
     ############################################################################## Action Menu ##############################################################################
     def build_team_menu_action(self, team= "target_ally", dead= False):
+        print(dead)
         teams = {
             "target_ally" : self.player_data.party.team,
             "target_enemy" : self.enemy_data.party.team
@@ -260,17 +262,19 @@ class Combat:
         stamina = member.current_stamina
         for item in items:
             if move == "attack":
-                weapon_menu.append(Menu_action(item.name, extra_text=[item.skills, member.grab_threshold_data(item), item.energy_spend], can_use=item.can_use(stamina), move="attack", button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_enemy")))
+                weapon_menu.append(Menu_action(item.name, extra_text=member.weapon_data(item), can_use=item.can_use(stamina), move="attack", button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_enemy")))
             else:
                 flags = item.flags
                 allow_dead = "target_dead" in flags
+                print(flags, allow_dead)
+                print(item.item_data)
 
                 if "target_ally" in flags:
-                    weapon_menu.append(Menu_action(item.name, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_ally", allow_dead)))
+                    weapon_menu.append(Menu_action(item.name, extra_text= item.item_data, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_ally", allow_dead)))
                 elif "target_enemy" in flags:
-                    weapon_menu.append(Menu_action(item.name, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_enemy", allow_dead)))
+                    weapon_menu.append(Menu_action(item.name, extra_text= item.item_data, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False, options= self.build_team_menu_action("target_enemy", allow_dead)))
                 else:
-                    weapon_menu.append(Menu_action(item.name, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False))
+                    weapon_menu.append(Menu_action(item.name, extra_text= item.item_data, can_use= item.can_use(stamina), move=move, button_display="spin", show_buttons= False))
         return weapon_menu
 
     def build_move_menu(self):
@@ -546,6 +550,8 @@ class Combat:
             for team in (self.enemy_data, self.player_data):
                 team.party.current_member = 0
                 team.party.regain_stamina(2)
+                team.inventory.organize_inventories(True)
+            self.build_move_menu()
             self.auto_move = False
             self.state = "player"
     
@@ -561,6 +567,7 @@ class Combat:
         for team in (self.enemy_data, self.player_data):
             team.party.team.clear()
             team.party.generate_allies(randrange(1, 17))
+            team.inventory.generate_items()
 
     def reset_combat(self):
         if self.debug:
@@ -635,4 +642,3 @@ class Combat:
             self.state_control()
             self.controller()
             self.display_ui()
-        self.music_manager.stop_music()

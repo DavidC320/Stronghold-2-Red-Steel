@@ -14,8 +14,6 @@ class Status_manager:
 
     def chance_add_effect(self, int_chance, effect):
         chance = randint(0, 100)
-        print( int_chance, effect)
-        print(chance <= int_chance)
         if chance <= int_chance:
             self.cure_effect(effect.name)
             if effect.length_type == "round":
@@ -35,10 +33,8 @@ class Status_manager:
                 return effect
 
     def grab_effect_type(self, effect_type):
-        print(self.get_data)
         for effect_lsit in (self.status_effects, self.temporary_effects):
             for effect in effect_lsit:
-                print(effect.name, effect.effect_type)
                 if effect.effect_type == effect_type:
                     return effect
 
@@ -76,3 +72,10 @@ effect types
     stat % - uses the base stat to change the stat
 
 """
+
+
+effects = (
+    Status_effect("50% Heal", "stat %", "health", .5, 0, length_type= "temporary"),
+    Status_effect("50% Revive", "stat %", "health", .5, 0, length_type= "temporary"),
+    Status_effect("Full Heal", "stat %", "health", 1, 0, length_type= "temporary")
+    )
